@@ -1,1 +1,0 @@
-# management-saas-school

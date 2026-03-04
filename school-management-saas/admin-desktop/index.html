@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Admin</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div id="login-page" class="page">
+      <div class="login-container">
+        <h2>Admin Login</h2>
+        <div id="login-error" class="error"></div>
+        <form id="login-form">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="login-email" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="dashboard-page" class="page" style="display: none;">
+      <div class="sidebar">
+        <h2>School Admin</h2>
+        <nav>
+          <a href="#" data-page="dashboard" class="nav-link active">Dashboard</a>
+          <a href="#" data-page="students" class="nav-link">Students</a>
+          <a href="#" data-page="teachers" class="nav-link">Teachers</a>
+          <a href="#" data-page="attendance" class="nav-link">Attendance</a>
+          <a href="#" data-page="fees" class="nav-link">Fees</a>
+        </nav>
+        <button id="logout-btn" class="btn btn-danger">Logout</button>
+      </div>
+
+      <div class="main-content">
+        <div id="dashboard-content" class="content-section">
+          <h1>Dashboard</h1>
+          <div class="stats-grid" id="stats-grid"></div>
+        </div>
+
+        <div id="students-content" class="content-section" style="display: none;">
+          <h1>Students Management</h1>
+          <button id="add-student-btn" class="btn btn-primary">Add Student</button>
+          <div id="students-list"></div>
+          
+          <!-- Add Student Modal -->
+          <div id="add-student-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+              <span class="close" onclick="closeAddStudentModal()">&times;</span>
+              <h2>Add New Student</h2>
+              <div id="add-student-error" class="error"></div>
+              <form id="add-student-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Student Name *</label>
+                    <input type="text" id="student-name" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="student-email" required>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" id="student-password" required minlength="6">
+                  </div>
+                  <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="student-phone">
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Roll Number *</label>
+                    <input type="text" id="student-roll" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Class *</label>
+                    <input type="text" id="student-class" required placeholder="e.g., 10">
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Section *</label>
+                    <input type="text" id="student-section" required placeholder="e.g., A">
+                  </div>
+                  <div class="form-group">
+                    <label>Date of Birth *</label>
+                    <input type="date" id="student-dob" required>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Parent Name *</label>
+                    <input type="text" id="student-parent-name" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Parent Phone *</label>
+                    <input type="tel" id="student-parent-phone" required>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Address *</label>
+                  <textarea id="student-address" required rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="button" class="btn btn-secondary" onclick="closeAddStudentModal()">Cancel</button>
+                  <button type="submit" class="btn btn-primary" id="submit-student-btn">Add Student</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="teachers-content" class="content-section" style="display: none;">
+          <h1>Teachers Management</h1>
+          <button id="add-teacher-btn" class="btn btn-primary">Add Teacher</button>
+          <div id="teachers-list"></div>
+          
+          <!-- Add Teacher Modal -->
+          <div id="add-teacher-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+              <span class="close" onclick="closeAddTeacherModal()">&times;</span>
+              <h2>Add New Teacher</h2>
+              <div id="add-teacher-error" class="error"></div>
+              <form id="add-teacher-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Teacher Name *</label>
+                    <input type="text" id="teacher-name" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="teacher-email" required>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" id="teacher-password" required minlength="6">
+                  </div>
+                  <div class="form-group">
+                    <label>Phone *</label>
+                    <input type="tel" id="teacher-phone" required>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Employee ID *</label>
+                    <input type="text" id="teacher-employee-id" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Subject *</label>
+                    <input type="text" id="teacher-subject" required placeholder="e.g., Mathematics">
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Qualification *</label>
+                    <input type="text" id="teacher-qualification" required placeholder="e.g., M.Sc, B.Ed">
+                  </div>
+                  <div class="form-group">
+                    <label>Salary *</label>
+                    <input type="number" id="teacher-salary" required placeholder="e.g., 50000">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Address *</label>
+                  <textarea id="teacher-address" required rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="button" class="btn btn-secondary" onclick="closeAddTeacherModal()">Cancel</button>
+                  <button type="submit" class="btn btn-primary" id="submit-teacher-btn">Add Teacher</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="attendance-content" class="content-section" style="display: none;">
+          <h1>Attendance Management</h1>
+          <button id="mark-attendance-btn" class="btn btn-primary">Mark Attendance</button>
+          <div id="attendance-list"></div>
+          
+          <!-- Mark Attendance Modal -->
+          <div id="mark-attendance-modal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 800px;">
+              <span class="close" onclick="closeMarkAttendanceModal()">&times;</span>
+              <h2>Mark Attendance</h2>
+              <div id="mark-attendance-error" class="error"></div>
+              
+              <div style="margin-bottom: 20px;">
+                <label><strong>Date:</strong></label>
+                <input type="date" id="attendance-date" value="${new Date().toISOString().split('T')[0]}" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              </div>
+              
+              <div id="students-attendance-list" style="max-height: 400px; overflow-y: auto;">
+                <p>Loading students...</p>
+              </div>
+              
+              <div class="form-actions" style="margin-top: 20px;">
+                <button type="button" class="btn btn-secondary" onclick="closeMarkAttendanceModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submit-attendance-btn" onclick="submitAttendance()">Submit Attendance</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="fees-content" class="content-section" style="display: none;">
+          <h1>Fee Management</h1>
+          <button id="add-fee-btn" class="btn btn-primary">Add Fee</button>
+          <div id="fees-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
