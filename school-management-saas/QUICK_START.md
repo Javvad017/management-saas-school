@@ -1,122 +1,99 @@
-# Quick Start - 5 Minutes Setup
+# 🚀 Quick Start Guide
 
-## Prerequisites Check
+## Login Issue Fixed! ✅
 
-```bash
-# Check Node.js (should be v18+)
-node --version
+The CORS configuration has been updated. Follow these steps to test:
 
-# Check MongoDB (should be running)
-mongosh --version
-```
+## Step 1: Restart Backend (REQUIRED)
 
-## 1. Start MongoDB
+### Option A: Using Batch Script (Easiest)
+Double-click: `restart-backend.bat`
 
-**Windows:**
-```bash
-net start MongoDB
-```
-
-**Mac/Linux:**
-```bash
-sudo systemctl start mongodb
-# or
-brew services start mongodb-community
-```
-
-## 2. Backend (Terminal 1)
-
+### Option B: Manual Restart
+1. Find the terminal running the backend
+2. Press `Ctrl+C` to stop
+3. Run:
 ```bash
 cd school-management-saas/backend
-npm install
-npm run dev
+node server.js
 ```
 
-Wait for: `Server running in development mode on port 5000`
+## Step 2: Login to Super Admin Panel
 
-## 3. Create Test Data (Terminal 2)
+1. Open: `school-management-saas/super-admin-panel/login.html`
+2. Enter credentials:
+   - **Email**: `admin@test.com`
+   - **Password**: `admin123`
+3. Click "Sign In"
+4. You'll be redirected to the dashboard! 🎉
+
+## What Was Fixed?
+
+The backend CORS was blocking requests from `file://` protocol. Now it accepts requests from any origin during development.
+
+**Changed in `backend/server.js`:**
+```javascript
+// Now allows all origins (including file://)
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+```
+
+## Verify Backend is Running
 
 ```bash
-cd school-management-saas/backend
+curl http://localhost:5000/api/health
+```
 
-# Create SuperAdmin
-curl -X POST http://localhost:5000/api/auth/register \
+Should return: `{"success":true,"message":"Server is running"}`
+
+## Test Login API
+
+```bash
+curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d "{\"name\":\"Super Admin\",\"email\":\"super@admin.com\",\"password\":\"admin123\",\"role\":\"SuperAdmin\"}"
-
-# Save the token from response, then create school:
-curl -X POST http://localhost:5000/api/schools \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-  -d "{\"name\":\"Demo School\",\"address\":\"123 St\",\"phone\":\"1234567890\",\"email\":\"demo@school.com\",\"adminName\":\"School Admin\",\"adminEmail\":\"admin@demo.com\",\"adminPassword\":\"admin123\"}"
+  -d "{\"email\":\"admin@test.com\",\"password\":\"admin123\"}"
 ```
 
-## 4. User Website (Terminal 3)
-
-```bash
-cd school-management-saas/user-website
-npm install
-npm run dev
-```
-
-Open: http://localhost:3000
-
-## 5. Admin Desktop (Terminal 4)
-
-```bash
-cd school-management-saas/admin-desktop
-npm install
-npm start
-```
-
-## Test Credentials
-
-After creating school in step 3:
-
-**Admin Desktop Login:**
-- Email: admin@demo.com
-- Password: admin123
-
-**Create a student first via Admin Desktop, then:**
-
-**User Website Login:**
-- Email: (student email you created)
-- Password: (student password you set)
+Should return token and user data.
 
 ## Troubleshooting
 
-### MongoDB not running?
+### Still getting "Failed to fetch"?
+- ❌ Backend not restarted → Restart using steps above
+- ❌ Wrong port → Check: `netstat -ano | findstr :5000`
+- ❌ MongoDB not running → Start MongoDB service
+
+### "Invalid credentials"?
+- Use: `admin@test.com` (not `superadmin@example.com`)
+- Password: `admin123`
+
+### Need to create new admin?
 ```bash
-# Windows
-net start MongoDB
-
-# Mac
-brew services start mongodb-community
-
-# Linux
-sudo systemctl start mongodb
+cd school-management-saas/backend
+node scripts/createAdmin.js
 ```
 
-### Port 5000 already in use?
-Edit `backend/.env` and change PORT to 5001
+## Next Steps
 
-### Can't connect to backend?
-Make sure backend terminal shows "MongoDB Connected"
+After login works:
+1. Explore the Super Admin dashboard
+2. Create a school
+3. Test school management features
+4. Continue building Student Portal
+5. Build Teacher Portal
+6. Create Admin Desktop (Electron)
 
-### CORS error?
-Backend is configured for localhost:3000 and localhost:5173
+## Available Portals
 
-## What's Next?
+| Portal | Status | URL |
+|--------|--------|-----|
+| Super Admin Panel | ✅ Complete | `super-admin-panel/login.html` |
+| Student Portal | 🔄 10% | `student-portal/login.html` |
+| Teacher Portal | ⏳ Not Started | - |
+| Admin Desktop | ⏳ Not Started | - |
 
-1. Login to Admin Desktop
-2. Create students and teachers
-3. Mark attendance
-4. Add fee records
-5. Login to User Website with student credentials
-6. View dashboard, attendance, and fees
+---
 
-## Full Documentation
-
-- See `README.md` for complete documentation
-- See `API_EXAMPLES.md` for all API endpoints
-- See `SETUP_GUIDE.md` for detailed setup instructions
+**Ready to test!** Restart backend and login with `admin@test.com` / `admin123`

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/database.js';
 import errorHandler from './middlewares/errorHandler.js';
+import User from './models/User.js';
 
 // Route imports
 import authRoutes from './routes/authRoutes.js';
@@ -24,15 +25,41 @@ dotenv.config();
 // Connect to database
 connectDB();
 
+// Auto-create Super Admin if none exists
+const ensureSuperAdmin = async () => {
+  try {
+    const superAdminExists = await User.findOne({ role: 'SuperAdmin' });
+    
+    if (!superAdminExists) {
+      const superAdminData = {
+        name: 'Super Admin',
+        email: 'superadmin@example.com',
+        password: 'admin123',
+        role: 'SuperAdmin'
+      };
+      
+      await User.create(superAdminData);
+      console.log('✅ Auto-created Super Admin account');
+      console.log('   Email:', superAdminData.email);
+      console.log('   Password:', superAdminData.password);
+    }
+  } catch (error) {
+    console.error('⚠️  Could not auto-create Super Admin:', error.message);
+  }
+};
+
+// Run after database connection
+setTimeout(ensureSuperAdmin, 1000);
+
 const app = express();
 
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Enable CORS
+// Enable CORS - Allow all origins in development
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173'],
+  origin: true, // Allow all origins (for file:// protocol and any localhost port)
   credentials: true
 }));
 

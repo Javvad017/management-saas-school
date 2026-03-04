@@ -8,6 +8,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "create-admin": "node scripts/createAdmin.js",
+    "create-super-admin": "node scripts/createSuperAdmin.js",
     "create-school-admin": "node scripts/createSchoolAdmin.js",
     "test-login": "node scripts/testLogin.js",
     "diagnose-login": "node scripts/diagnoseLogin.js",
