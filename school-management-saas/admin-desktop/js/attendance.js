@@ -42,19 +42,19 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 // Load Students
 async function loadStudents(classFilter = '') {
   const tbody = document.getElementById('students-tbody');
-  
+
   try {
     console.log('Fetching students...');
     let endpoint = '/students';
     if (classFilter) {
       endpoint += `?class=${classFilter}`;
     }
-    
+
     const { data } = await api.get(endpoint);
     studentsData = data.data;
-    
+
     console.log(`Loaded ${studentsData.length} students`);
-    
+
     if (studentsData.length === 0) {
       tbody.innerHTML = `
         <tr>
@@ -71,7 +71,7 @@ async function loadStudents(classFilter = '') {
       `;
       return;
     }
-    
+
     tbody.innerHTML = studentsData.map((student, index) => `
       <tr class="hover:bg-gray-50 transition-colors">
         <td class="px-6 py-4 whitespace-nowrap">
@@ -143,7 +143,7 @@ document.getElementById('class-filter').addEventListener('change', (e) => {
 // Mark Attendance
 document.getElementById('mark-attendance-btn').addEventListener('click', async () => {
   const date = document.getElementById('attendance-date').value;
-  
+
   if (!date) {
     showNotification('Please select a date', 'error');
     return;
@@ -155,25 +155,25 @@ document.getElementById('mark-attendance-btn').addEventListener('click', async (
   }
 
   const attendanceRecords = [];
-  
+
   // Collect attendance data
   studentsData.forEach((student, index) => {
     const radios = document.getElementsByName(`attendance-${index}`);
     let status = 'Present'; // Default
-    
+
     for (const radio of radios) {
       if (radio.checked) {
         status = radio.value;
         break;
       }
     }
-    
+
     // IMPORTANT: Ensure studentId is always included
     if (!student._id) {
       console.error('Student missing _id:', student);
       return;
     }
-    
+
     attendanceRecords.push({
       studentId: student._id, // This is the critical field
       date: date,
@@ -196,19 +196,28 @@ document.getElementById('mark-attendance-btn').addEventListener('click', async (
   markBtn.innerHTML = '<svg class="w-5 h-5 inline mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>Marking...';
 
   try {
-    // Submit each attendance record individually to ensure proper validation
-    for (const record of attendanceRecords) {
-      await api.post('/attendance', record);
+    // Submit all attendance records in one bulk request
+    const response = await api.post('/attendance/mark', {
+      attendance: attendanceRecords
+    });
+
+    const result = response.data;
+    const successCount = result.data?.length || attendanceRecords.length;
+    const errorCount = result.errors?.length || 0;
+
+    if (errorCount > 0) {
+      showNotification(`${successCount} records saved, ${errorCount} failed`, 'warning');
+      console.warn('Attendance errors:', result.errors);
+    } else {
+      showNotification(`Attendance marked for ${successCount} students!`, 'success');
     }
-    
-    showNotification('Attendance marked successfully!', 'success');
-    
+
     // Reload students to reset form
     await loadStudents(document.getElementById('class-filter').value);
   } catch (error) {
     console.error('Error marking attendance:', error);
     console.error('Error response:', error.response?.data);
-    
+
     const errorMessage = error.response?.data?.error || error.message || 'Failed to mark attendance';
     showNotification(errorMessage, 'error');
   } finally {
@@ -220,13 +229,12 @@ document.getElementById('mark-attendance-btn').addEventListener('click', async (
 // Show notification
 function showNotification(message, type = 'success') {
   const notification = document.createElement('div');
-  notification.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg text-white font-semibold z-50 transform transition-all duration-300 ${
-    type === 'success' ? 'bg-green-500' : 'bg-red-500'
-  }`;
+  notification.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg text-white font-semibold z-50 transform transition-all duration-300 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    }`;
   notification.textContent = message;
-  
+
   document.body.appendChild(notification);
-  
+
   setTimeout(() => {
     notification.style.opacity = '0';
     setTimeout(() => notification.remove(), 300);

@@ -6,6 +6,19 @@ class AttendanceService {
   async markAttendance(attendanceData, schoolId, markedBy) {
     const { date, students } = attendanceData;
 
+    // Guard: ensure students is a valid, iterable array
+    if (!students || !Array.isArray(students)) {
+      throw new Error(
+        'Invalid attendance data: "students" must be an array. ' +
+        `Received: ${typeof students}. ` +
+        `Keys in body: [${Object.keys(attendanceData || {}).join(', ')}]`
+      );
+    }
+
+    if (!date) {
+      throw new Error('Invalid attendance data: "date" is required');
+    }
+
     const attendanceRecords = [];
     const errors = [];
 

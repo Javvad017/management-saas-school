@@ -1,6 +1,6 @@
 /**
- * Centralized API Service for Student Portal
- * Handles all backend communication with auth, error handling, and retry logic
+ * Unified API Service for Student + Teacher Portal
+ * Handles all backend communication with auth, error handling, and auto-refresh
  */
 
 const API_BASE = 'http://localhost:5000/api';
@@ -25,10 +25,15 @@ class ApiService {
         return !!this.token;
     }
 
+    /** Get login page path (handles subdirectories) */
+    getLoginPath() {
+        return window.location.pathname.includes('/teacher/') ? '../login.html' : 'login.html';
+    }
+
     /** Redirect to login if not authenticated */
     requireAuth() {
         if (!this.isAuthenticated()) {
-            window.location.href = 'login.html';
+            window.location.href = this.getLoginPath();
             return false;
         }
         return true;
@@ -59,47 +64,106 @@ class ApiService {
         }
     }
 
-    /** GET student dashboard data */
+    /** POST request */
+    async post(endpoint, body) {
+        return this.request(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(body)
+        });
+    }
+
+    /** PUT request */
+    async put(endpoint, body) {
+        return this.request(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify(body)
+        });
+    }
+
+    // ==================== STUDENT ENDPOINTS ====================
+
     async getDashboard() {
         return this.request('/student-portal/dashboard');
     }
 
-    /** GET student attendance records */
     async getAttendance() {
         return this.request('/student-portal/attendance');
     }
 
-    /** GET student fee records */
     async getFees() {
         return this.request('/student-portal/fees');
     }
 
-    /** GET student exam results */
     async getResults() {
         return this.request('/student-portal/results');
     }
 
-    /** GET student profile */
     async getProfile() {
         return this.request('/student-portal/profile');
     }
 
-    /** GET student homework */
     async getHomework() {
         return this.request('/student-portal/homework');
     }
 
-    /** GET student announcements */
     async getAnnouncements() {
         return this.request('/student-portal/announcements');
     }
+
+    // ==================== TEACHER ENDPOINTS ====================
+
+    /** GET all students (for attendance marking) */
+    async getStudents(filters = {}) {
+        const params = new URLSearchParams();
+        if (filters.class) params.set('class', filters.class);
+        if (filters.section) params.set('section', filters.section);
+        const qs = params.toString();
+        return this.request(`/students${qs ? '?' + qs : ''}`);
+    }
+
+    /** POST mark attendance */
+    async markAttendance(attendanceRecords) {
+        return this.post('/attendance/mark', { attendance: attendanceRecords });
+    }
+
+    /** GET attendance records */
+    async getAttendanceRecords() {
+        return this.request('/attendance');
+    }
+
+    /** GET all homework */
+    async getAllHomework() {
+        return this.request('/homework');
+    }
+
+    /** POST create homework */
+    async createHomework(homeworkData) {
+        return this.post('/homework', homeworkData);
+    }
+
+    /** GET all exams */
+    async getExams() {
+        return this.request('/exams');
+    }
+
+    /** POST add result/marks */
+    async addResult(resultData) {
+        return this.post('/exams/results', resultData);
+    }
+
+    /** GET exam results */
+    async getExamResults(examId) {
+        return this.request(`/exams/${examId}/results`);
+    }
+
+    // ==================== SHARED ====================
 
     /** Logout and clear storage */
     logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         if (this.refreshInterval) clearInterval(this.refreshInterval);
-        window.location.href = 'login.html';
+        window.location.href = this.getLoginPath();
     }
 
     /** Start auto-refresh for real-time data */
@@ -119,13 +183,15 @@ class ApiService {
 
     /** Get user display info */
     getUserInfo() {
+        const role = (this.user.role || 'User');
         return {
-            name: this.user.name || 'Student',
+            name: this.user.name || 'User',
             email: this.user.email || '',
-            role: this.user.role || 'Student',
+            role: role,
+            roleLabel: role.charAt(0).toUpperCase() + role.slice(1),
             class: this.user.class || '',
             section: this.user.section || '',
-            initial: (this.user.name || 'S').charAt(0).toUpperCase()
+            initial: (this.user.name || 'U').charAt(0).toUpperCase()
         };
     }
 }

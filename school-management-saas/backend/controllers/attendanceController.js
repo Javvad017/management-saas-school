@@ -10,7 +10,26 @@ export const markAttendance = asyncHandler(async (req, res, next) => {
   const markedBy = req.user.id;
 
   try {
-    const result = await attendanceService.markAttendance(req.body, schoolId, markedBy);
+    // Normalize request body to handle both frontend formats:
+    //   Format A (admin-desktop): { attendance: [{ studentId, date, status }] }
+    //   Format B (original):      { date, students: [{ studentId, status }] }
+    let normalizedBody = req.body;
+
+    if (req.body.attendance && Array.isArray(req.body.attendance)) {
+      // Convert Format A → Format B
+      const records = req.body.attendance;
+      const date = records[0]?.date || new Date().toISOString().split('T')[0];
+      normalizedBody = {
+        date,
+        students: records.map(r => ({
+          studentId: r.studentId,
+          status: r.status,
+          remarks: r.remarks || ''
+        }))
+      };
+    }
+
+    const result = await attendanceService.markAttendance(normalizedBody, schoolId, markedBy);
 
     res.status(201).json({
       success: true,
@@ -55,16 +74,38 @@ export const getAttendance = asyncHandler(async (req, res, next) => {
   const schoolId = req.user.schoolId;
   const { studentId, startDate, endDate } = req.query;
 
-  if (!studentId) {
-    return next(new ErrorResponse('Student ID is required', 400));
+  // If studentId provided, return that student's records
+  if (studentId) {
+    const attendance = await attendanceService.getStudentAttendance(
+      studentId,
+      schoolId,
+      startDate,
+      endDate
+    );
+
+    return res.status(200).json({
+      success: true,
+      count: attendance.length,
+      data: attendance
+    });
   }
 
-  const attendance = await attendanceService.getStudentAttendance(
-    studentId,
-    schoolId,
-    startDate,
-    endDate
-  );
+  // Otherwise return all school attendance records (admin listing)
+  const Attendance = (await import('../models/Attendance.js')).default;
+  const query = {};
+  if (schoolId) query.schoolId = schoolId;
+  if (startDate && endDate) {
+    query.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
+  }
+
+  const attendance = await Attendance.find(query)
+    .sort({ date: -1 })
+    .limit(100)
+    .populate({
+      path: 'studentId',
+      populate: { path: 'userId', select: 'name email' }
+    })
+    .populate('markedBy', 'name');
 
   res.status(200).json({
     success: true,

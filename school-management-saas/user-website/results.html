@@ -202,9 +202,10 @@
     </main>
   </div>
 
+  <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script>
-    if (!api.requireAuth()) window.location.href = 'login.html';
+    if (!auth.requireStudent()) throw new Error('Unauthorized');
 
     const info = api.getUserInfo();
     document.getElementById('user-display-name').textContent = info.name;
