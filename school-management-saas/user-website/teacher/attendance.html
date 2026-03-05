@@ -121,6 +121,32 @@
                     <div class="flex flex-wrap items-end gap-4">
                         <div>
                             <label
+                                class="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wider">Class</label>
+                            <select id="class-select" onchange="teacherApp.onClassChange()"
+                                class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent min-w-[120px]">
+                                <option value="">Select...</option>
+                                <option value="1">Class 1</option>
+                                <option value="2">Class 2</option>
+                                <option value="3">Class 3</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
+                                <option value="10">Class 10</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wider">Section</label>
+                            <select id="section-select" onchange="teacherApp.loadStudentsForAttendance()"
+                                class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent min-w-[120px]">
+                                <option value="">Select...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
                                 class="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wider">Date</label>
                             <input type="date" id="attendance-date"
                                 class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
@@ -189,8 +215,7 @@
         // Set today's date
         document.getElementById('attendance-date').value = new Date().toISOString().split('T')[0];
 
-        // Load data
-        teacherApp.loadStudentsForAttendance();
+        // Load recent data
         teacherApp.loadRecentAttendance();
     </script>
 </body>

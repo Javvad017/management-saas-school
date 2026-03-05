@@ -206,11 +206,52 @@ class TeacherDashboard {
 
     // ==================== MARK ATTENDANCE ====================
 
+    async onClassChange() {
+        const classSelect = document.getElementById('class-select');
+        const sectionSelect = document.getElementById('section-select');
+        if (!classSelect || !sectionSelect) return;
+
+        const classVal = classSelect.value;
+        sectionSelect.innerHTML = '<option value="">Select...</option>';
+
+        if (!classVal) return;
+
+        try {
+            const res = await api.getSections(classVal);
+            const sections = this.extractArray(res);
+
+            if (sections.length > 0) {
+                sections.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = opt.textContent = s.name;
+                    sectionSelect.appendChild(opt);
+                });
+            }
+        } catch (err) {
+            console.error('Error loading sections:', err);
+        }
+    }
+
     async loadStudentsForAttendance() {
         const container = document.getElementById('attendance-student-list');
+        const classSelect = document.getElementById('class-select');
+        const sectionSelect = document.getElementById('section-select');
+
+        if (!container) return;
+
+        if (classSelect && sectionSelect && (!classSelect.value || !sectionSelect.value)) {
+            container.innerHTML = '<p class="text-gray-400 text-center py-8">Please select both class and section</p>';
+            this.students = [];
+            return;
+        }
+
         try {
             console.log('Fetching students for attendance...');
-            const res = await api.getStudents();
+            const filters = {};
+            if (classSelect) filters.class = classSelect.value;
+            if (sectionSelect) filters.section = sectionSelect.value;
+
+            const res = await api.getStudents(filters);
 
             // Debug: log raw API response
             console.log('Students API Response:', res);

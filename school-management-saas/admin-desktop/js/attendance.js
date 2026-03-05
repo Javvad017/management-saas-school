@@ -40,14 +40,18 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 });
 
 // Load Students
-async function loadStudents(classFilter = '') {
+async function loadStudents(classFilter = '', sectionFilter = '') {
   const tbody = document.getElementById('students-tbody');
 
   try {
     console.log('Fetching students...');
     let endpoint = '/students';
-    if (classFilter) {
-      endpoint += `?class=${classFilter}`;
+    const queryParams = [];
+    if (classFilter) queryParams.push(`class=${classFilter}`);
+    if (sectionFilter) queryParams.push(`section=${sectionFilter}`);
+
+    if (queryParams.length > 0) {
+      endpoint += `?${queryParams.join('&')}`;
     }
 
     const { data } = await api.get(endpoint);
@@ -135,10 +139,52 @@ async function loadStudents(classFilter = '') {
   }
 }
 
+// Load Sections dynamically
+async function loadSectionsForClass(classValue) {
+  const sectionSelect = document.getElementById('section-filter');
+  if (!sectionSelect) return;
+
+  const defaultOption = '<option value="">All Sections</option>';
+
+  if (!classValue) {
+    sectionSelect.innerHTML = defaultOption;
+    return;
+  }
+
+  try {
+    const { data } = await api.get(`/sections?class=${classValue}`);
+    const sections = data.data;
+
+    if (!sections || !Array.isArray(sections) || sections.length === 0) {
+      sectionSelect.innerHTML = defaultOption;
+      return;
+    }
+
+    sectionSelect.innerHTML = defaultOption +
+      sections.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+
+  } catch (error) {
+    console.error('Error loading sections:', error);
+    sectionSelect.innerHTML = defaultOption;
+  }
+}
+
 // Class filter change
-document.getElementById('class-filter').addEventListener('change', (e) => {
-  loadStudents(e.target.value);
+document.getElementById('class-filter').addEventListener('change', async (e) => {
+  const classValue = e.target.value;
+  document.getElementById('section-filter').value = '';
+  await loadSectionsForClass(classValue);
+  loadStudents(classValue, '');
 });
+
+// Section filter change
+const sectionFilterEl = document.getElementById('section-filter');
+if (sectionFilterEl) {
+  sectionFilterEl.addEventListener('change', (e) => {
+    const classValue = document.getElementById('class-filter').value;
+    loadStudents(classValue, e.target.value);
+  });
+}
 
 // Mark Attendance
 document.getElementById('mark-attendance-btn').addEventListener('click', async () => {

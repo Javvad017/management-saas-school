@@ -80,14 +80,14 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 // Load Students
 async function loadStudents() {
   const tbody = document.getElementById('students-tbody');
-  
+
   try {
     console.log('Fetching students...');
     const { data } = await api.get('/students');
     const students = data.data;
-    
+
     console.log(`Loaded ${students.length} students`);
-    
+
     if (students.length === 0) {
       tbody.innerHTML = `
         <tr>
@@ -104,7 +104,7 @@ async function loadStudents() {
       `;
       return;
     }
-    
+
     tbody.innerHTML = students.map(student => `
       <tr class="transition-all duration-200">
         <td class="px-6 py-4 whitespace-nowrap">
@@ -175,14 +175,14 @@ async function loadStudents() {
 // Load Teachers
 async function loadTeachers() {
   const tbody = document.getElementById('teachers-tbody');
-  
+
   try {
     console.log('Fetching teachers...');
     const { data } = await api.get('/teachers');
     const teachers = data.data;
-    
+
     console.log(`Loaded ${teachers.length} teachers`);
-    
+
     if (teachers.length === 0) {
       tbody.innerHTML = `
         <tr>
@@ -199,7 +199,7 @@ async function loadTeachers() {
       `;
       return;
     }
-    
+
     tbody.innerHTML = teachers.map(teacher => `
       <tr class="transition-all duration-200">
         <td class="px-6 py-4 whitespace-nowrap">
@@ -290,12 +290,12 @@ document.getElementById('cancel-student-btn').addEventListener('click', closeStu
 
 studentForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  
+
   const submitBtn = document.getElementById('submit-student-btn');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Adding...';
   studentError.classList.add('hidden');
-  
+
   const studentData = {
     name: document.getElementById('student-name').value.trim(),
     email: document.getElementById('student-email').value.trim(),
@@ -303,13 +303,21 @@ studentForm.addEventListener('submit', async (e) => {
     phone: document.getElementById('student-phone').value.trim() || undefined,
     rollNumber: document.getElementById('student-roll').value.trim(),
     class: document.getElementById('student-class').value.trim(),
-    section: document.getElementById('student-section').value.trim(),
+    section: document.getElementById('student-section').value,
     dateOfBirth: document.getElementById('student-dob').value,
     parentName: document.getElementById('student-parent-name').value.trim(),
     parentPhone: document.getElementById('student-parent-phone').value.trim(),
     address: document.getElementById('student-address').value.trim()
   };
-  
+
+  if (!studentData.section) {
+    studentError.textContent = 'Please select a section';
+    studentError.classList.remove('hidden');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Add Student';
+    return;
+  }
+
   try {
     await api.post('/students', studentData);
     closeStudentModal();
@@ -348,12 +356,12 @@ document.getElementById('cancel-teacher-btn').addEventListener('click', closeTea
 
 teacherForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  
+
   const submitBtn = document.getElementById('submit-teacher-btn');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Adding...';
   teacherError.classList.add('hidden');
-  
+
   const teacherData = {
     name: document.getElementById('teacher-name').value.trim(),
     email: document.getElementById('teacher-email').value.trim(),
@@ -365,7 +373,7 @@ teacherForm.addEventListener('submit', async (e) => {
     salary: parseInt(document.getElementById('teacher-salary').value),
     address: document.getElementById('teacher-address').value.trim()
   };
-  
+
   try {
     await api.post('/teachers', teacherData);
     closeTeacherModal();
@@ -384,7 +392,7 @@ teacherForm.addEventListener('submit', async (e) => {
 // Delete Functions
 async function deleteStudent(id) {
   if (!confirm('Are you sure you want to delete this student?')) return;
-  
+
   try {
     await api.delete(`/students/${id}`);
     await loadStudents();
@@ -397,7 +405,7 @@ async function deleteStudent(id) {
 
 async function deleteTeacher(id) {
   if (!confirm('Are you sure you want to delete this teacher?')) return;
-  
+
   try {
     await api.delete(`/teachers/${id}`);
     await loadTeachers();
@@ -420,17 +428,65 @@ function viewTeacher(id) {
 // Notification Function
 function showNotification(message, type = 'success') {
   const notification = document.createElement('div');
-  notification.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg text-white font-semibold z-50 transform transition-all duration-300 ${
-    type === 'success' ? 'bg-green-500' : 'bg-red-500'
-  }`;
+  notification.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg text-white font-semibold z-50 transform transition-all duration-300 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    }`;
   notification.textContent = message;
-  
+
   document.body.appendChild(notification);
-  
+
   setTimeout(() => {
     notification.style.opacity = '0';
     setTimeout(() => notification.remove(), 300);
   }, 3000);
+}
+
+// Load sections for a class — dynamically populate the section dropdown
+async function loadSectionsForClass(classValue) {
+  const sectionSelect = document.getElementById('student-section');
+  if (!sectionSelect) return;
+
+  // Default options (fallback)
+  const defaultOptions = '<option value="">Select Section</option>' +
+    '<option value="A">A</option><option value="B">B</option><option value="C">C</option>';
+
+  if (!classValue) {
+    sectionSelect.innerHTML = defaultOptions;
+    return;
+  }
+
+  try {
+    console.log(`Loading sections for class "${classValue}"...`);
+    const { data } = await api.get(`/sections?class=${classValue}`);
+    const sections = data.data;
+
+    console.log('Sections API Response:', sections);
+
+    if (!sections || !Array.isArray(sections) || sections.length === 0) {
+      console.log('No sections available for this class, using defaults');
+      sectionSelect.innerHTML = defaultOptions;
+      return;
+    }
+
+    sectionSelect.innerHTML = '<option value="">Select Section</option>' +
+      sections.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+
+  } catch (error) {
+    console.error('Error loading sections:', error);
+    // Fallback to defaults on error
+    sectionSelect.innerHTML = defaultOptions;
+  }
+}
+
+// Listen for class input changes to load sections
+const classInput = document.getElementById('student-class');
+if (classInput) {
+  let sectionTimeout;
+  classInput.addEventListener('input', (e) => {
+    clearTimeout(sectionTimeout);
+    sectionTimeout = setTimeout(() => {
+      loadSectionsForClass(e.target.value.trim());
+    }, 400); // Debounce
+  });
 }
 
 // Make functions globally accessible
@@ -444,6 +500,8 @@ window.openStudentModal = openStudentModal;
 window.closeStudentModal = closeStudentModal;
 window.openTeacherModal = openTeacherModal;
 window.closeTeacherModal = closeTeacherModal;
+window.loadSectionsForClass = loadSectionsForClass;
 
 // Initial load
 loadStudents();
+

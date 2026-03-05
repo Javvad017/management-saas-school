@@ -18,6 +18,7 @@ import revenueRoutes from './routes/revenueRoutes.js';
 import announcementRoutes from './routes/announcementRoutes.js';
 import homeworkRoutes from './routes/homeworkRoutes.js';
 import studentPortalRoutes from './routes/studentPortalRoutes.js';
+import sectionRoutes from './routes/sectionRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -29,7 +30,7 @@ connectDB();
 const ensureSuperAdmin = async () => {
   try {
     const superAdminExists = await User.findOne({ role: 'SuperAdmin' });
-    
+
     if (!superAdminExists) {
       const superAdminData = {
         name: 'Super Admin',
@@ -37,7 +38,7 @@ const ensureSuperAdmin = async () => {
         password: 'admin123',
         role: 'SuperAdmin'
       };
-      
+
       await User.create(superAdminData);
       console.log('✅ Auto-created Super Admin account');
       console.log('   Email:', superAdminData.email);
@@ -76,6 +77,7 @@ app.use('/api/revenue', revenueRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/homework', homeworkRoutes);
 app.use('/api/student', studentPortalRoutes);
+app.use('/api/sections', sectionRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

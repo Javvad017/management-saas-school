@@ -156,6 +156,17 @@ class ApiService {
         return this.request(`/exams/${examId}/results`);
     }
 
+    /** GET sections (optionally by class) */
+    async getSections(classFilter) {
+        const qs = classFilter ? `?class=${classFilter}` : '';
+        return this.request(`/sections${qs}`);
+    }
+
+    /** POST create section */
+    async createSection(sectionData) {
+        return this.post('/sections', sectionData);
+    }
+
     // ==================== SHARED ====================
 
     /** Logout and clear storage */
