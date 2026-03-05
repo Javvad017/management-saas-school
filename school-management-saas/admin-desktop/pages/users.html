@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users Management - School Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tab-button.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+    }
+    
+    .modal-backdrop {
+      backdrop-filter: blur(4px);
+    }
+    
+    .btn-gradient {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-gradient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white flex-shrink-0">
+      <div class="p-6">
+        <h1 class="text-2xl font-bold mb-8">School Admin</h1>
+        <nav class="space-y-2">
+          <a href="dashboard.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            Dashboard
+          </a>
+          <a href="users.html" class="flex items-center px-4 py-3 rounded-lg bg-gray-700 transition">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            Users
+          </a>
+          <a href="attendance.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+            </svg>
+            Attendance
+          </a>
+          <a href="fees.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Fees
+          </a>
+        </nav>
+      </div>
+      <div class="absolute bottom-0 w-64 p-6">
+        <button id="logout-btn" class="w-full flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Navbar -->
+      <header class="bg-white shadow-sm z-10">
+        <div class="flex items-center justify-between px-8 py-4">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">Users Management</h2>
+            <p class="text-sm text-gray-600">Manage students and teachers</p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="text-right">
+              <p class="text-sm font-medium text-gray-800" id="user-name">Admin User</p>
+              <p class="text-xs text-gray-600" id="user-role">School Admin</p>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold">
+              A
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <main class="flex-1 overflow-y-auto p-8">
+        <!-- Toggle Buttons -->
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex space-x-4">
+            <button id="students-tab" class="tab-button active px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-md">
+              <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+              Students
+            </button>
+            <button id="teachers-tab" class="tab-button px-8 py-3 rounded-lg font-semibold bg-white text-gray-700 hover:bg-gray-100 transition-all duration-300 shadow-md">
+              <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              Teachers
+            </button>
+          </div>
+          <button id="add-user-btn" class="btn-gradient px-6 py-3 rounded-lg text-white font-semibold shadow-lg flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <span id="add-btn-text">Add Student</span>
+          </button>
+        </div>
+
+        <!-- Students Table -->
+        <div id="students-section" class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+          <div class="overflow-x-auto">
+            <table class="w-full table-hover">
+              <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Roll No</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Name</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Class</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Section</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Parent Phone</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="students-tbody" class="divide-y divide-gray-200">
+                <tr>
+                  <td colspan="6" class="px-6 py-12 text-center">
+                    <div class="flex flex-col items-center justify-center">
+                      <svg class="w-16 h-16 text-gray-300 mb-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                      </svg>
+                      <p class="text-gray-500 font-medium">Loading students...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Teachers Table -->
+        <div id="teachers-section" class="bg-white rounded-xl shadow-lg overflow-hidden card-hover hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full table-hover">
+              <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Employee ID</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Name</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Subject</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Phone</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Salary</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teachers-tbody" class="divide-y divide-gray-200">
+                <tr>
+                  <td colspan="6" class="px-6 py-12 text-center">
+                    <div class="flex flex-col items-center justify-center">
+                      <svg class="w-16 h-16 text-gray-300 mb-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                      </svg>
+                      <p class="text-gray-500 font-medium">Loading teachers...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Student Modal -->
+  <div id="student-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+      <div class="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-6 rounded-t-2xl">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold">Add New Student</h3>
+          <button id="close-student-modal" class="text-white hover:text-gray-200 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <form id="student-form" class="p-8">
+        <div id="student-error" class="hidden mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded"></div>
+        
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Student Name *</label>
+            <input type="text" id="student-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+            <input type="email" id="student-email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Password *</label>
+            <input type="password" id="student-password" required minlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+            <input type="tel" id="student-phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Roll Number *</label>
+            <input type="text" id="student-roll" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Class *</label>
+            <input type="text" id="student-class" required placeholder="e.g., 10" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Section *</label>
+            <input type="text" id="student-section" required placeholder="e.g., A" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Date of Birth *</label>
+            <input type="date" id="student-dob" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Parent Name *</label>
+            <input type="text" id="student-parent-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Parent Phone *</label>
+            <input type="tel" id="student-parent-phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Address *</label>
+          <textarea id="student-address" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"></textarea>
+        </div>
+        <div class="flex justify-end space-x-4 mt-8">
+          <button type="button" id="cancel-student-btn" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition">Cancel</button>
+          <button type="submit" id="submit-student-btn" class="btn-gradient px-6 py-3 rounded-lg text-white font-semibold shadow-lg">Add Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Teacher Modal -->
+  <div id="teacher-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+      <div class="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-6 rounded-t-2xl">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold">Add New Teacher</h3>
+          <button id="close-teacher-modal" class="text-white hover:text-gray-200 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <form id="teacher-form" class="p-8">
+        <div id="teacher-error" class="hidden mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded"></div>
+        
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Teacher Name *</label>
+            <input type="text" id="teacher-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+            <input type="email" id="teacher-email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Password *</label>
+            <input type="password" id="teacher-password" required minlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Phone *</label>
+            <input type="tel" id="teacher-phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Employee ID *</label>
+            <input type="text" id="teacher-employee-id" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Subject *</label>
+            <input type="text" id="teacher-subject" required placeholder="e.g., Mathematics" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Qualification *</label>
+            <input type="text" id="teacher-qualification" required placeholder="e.g., M.Sc, B.Ed" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Salary *</label>
+            <input type="number" id="teacher-salary" required placeholder="e.g., 50000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+          </div>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Address *</label>
+          <textarea id="teacher-address" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"></textarea>
+        </div>
+        <div class="flex justify-end space-x-4 mt-8">
+          <button type="button" id="cancel-teacher-btn" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition">Cancel</button>
+          <button type="submit" id="submit-teacher-btn" class="btn-gradient px-6 py-3 rounded-lg text-white font-semibold shadow-lg">Add Teacher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/users.js"></script>
+</body>
+</html>

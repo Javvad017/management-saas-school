@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - School Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .stat-card { transition: transform 0.2s; }
+    .stat-card:hover { transform: translateY(-4px); }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gradient-to-b from-indigo-900 to-indigo-800 text-white">
+      <div class="p-6">
+        <h1 class="text-2xl font-bold mb-8">School Admin</h1>
+        <nav class="space-y-2">
+          <a href="dashboard.html" class="flex items-center px-4 py-3 rounded-lg bg-indigo-700">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            Dashboard
+          </a>
+          <a href="users.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-700">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            Users
+          </a>
+          <a href="attendance.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-700">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+            </svg>
+            Attendance
+          </a>
+          <a href="fees.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-700">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Fees
+          </a>
+          <a href="reports.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-700">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Reports
+          </a>
+        </nav>
+      </div>
+      <div class="absolute bottom-0 w-64 p-6">
+        <button id="logout-btn" class="w-full flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+      <!-- Top Navbar -->
+      <header class="bg-white shadow-sm">
+        <div class="flex items-center justify-between px-8 py-4">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
+            <p class="text-sm text-gray-600">Welcome back, <span id="user-name">Admin</span></p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="text-right">
+              <p class="text-sm font-medium text-gray-800" id="user-display-name">Admin User</p>
+              <p class="text-xs text-gray-600" id="user-role">School Admin</p>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
+              A
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <main class="flex-1 overflow-y-auto p-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Total Students -->
+          <div class="stat-card bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Total Students</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2" id="total-students">0</p>
+              </div>
+              <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Teachers -->
+          <div class="stat-card bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Total Teachers</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2" id="total-teachers">0</p>
+              </div>
+              <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Present Today -->
+          <div class="stat-card bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Present Today</p>
+                <p class="text-3xl font-bold text-green-600 mt-2" id="present-today">0</p>
+              </div>
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Absent Today -->
+          <div class="stat-card bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Absent Today</p>
+                <p class="text-3xl font-bold text-red-600 mt-2" id="absent-today">0</p>
+              </div>
+              <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Activity</h3>
+          <div id="recent-activity" class="space-y-4">
+            <p class="text-gray-500">Loading...</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const axios = require('axios');
+    const API_URL = 'http://localhost:5000/api';
+    let token = localStorage.getItem('token');
+    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+    const api = axios.create({
+      baseURL: API_URL,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    api.interceptors.request.use(config => {
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    });
+
+    if (!token) window.location.href = 'index.html';
+
+    if (currentUser.name) {
+      document.getElementById('user-name').textContent = currentUser.name;
+      document.getElementById('user-display-name').textContent = currentUser.name;
+      document.getElementById('user-role').textContent = currentUser.role || 'Admin';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    });
+
+    async function loadDashboard() {
+      try {
+        const { data: statsData } = await api.get('/dashboard/stats');
+        const stats = statsData.data;
+
+        document.getElementById('total-students').textContent = stats.totalStudents || 0;
+        document.getElementById('total-teachers').textContent = stats.totalTeachers || 0;
+        document.getElementById('present-today').textContent = stats.presentToday || 0;
+        document.getElementById('absent-today').textContent = stats.absentToday || 0;
+
+        const { data: studentsData } = await api.get('/students?limit=5');
+        const students = studentsData.data;
+
+        const activityHtml = students.slice(0, 5).map(student => `
+          <div class="flex items-center justify-between py-3 border-b">
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                <span class="text-blue-600 font-bold">${(student.userId?.name || 'S').charAt(0)}</span>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-900">${student.userId?.name || 'Student'}</p>
+                <p class="text-xs text-gray-600">Class ${student.class} - ${student.section}</p>
+              </div>
+            </div>
+            <span class="text-xs text-gray-500">Recently added</span>
+          </div>
+        `).join('');
+
+        document.getElementById('recent-activity').innerHTML = activityHtml || '<p class="text-gray-500">No recent activity</p>';
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+      }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

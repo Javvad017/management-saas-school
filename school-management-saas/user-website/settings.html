@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Student Portal</title>
+    <meta name="description" content="Manage your account settings and preferences">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h2>EduPortal</h2><span>Student Dashboard</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Main</div>
+            <a href="dashboard.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="attendance.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                <span>Attendance</span>
+            </a>
+            <a href="fees.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Fees</span>
+            </a>
+            <a href="results.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span>Results</span>
+            </a>
+            <div class="nav-section-label">System</div>
+            <a href="notifications.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <span>Notifications</span>
+            </a>
+            <a href="settings.html" class="nav-item active">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="nav-item" id="logout-btn">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="top-navbar">
+            <div class="navbar-left">
+                <div class="page-title">
+                    <h1>Settings</h1>
+                    <p>Manage your preferences</p>
+                </div>
+            </div>
+            <div class="navbar-right">
+                <div class="profile-dropdown">
+                    <div class="profile-avatar" id="user-avatar">S</div>
+                    <div class="profile-info">
+                        <div class="name" id="user-display-name">Student</div>
+                        <div class="role" id="user-role">Student</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content-area" style="max-width: 800px;">
+            <!-- Profile Section -->
+            <div class="settings-card animate-in">
+                <h3>👤 Profile Information</h3>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label" id="profile-name">Loading...</div>
+                        <div class="setting-desc">Full Name</div>
+                    </div>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label" id="profile-email">Loading...</div>
+                        <div class="setting-desc">Email Address</div>
+                    </div>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label" id="profile-class">—</div>
+                        <div class="setting-desc">Class & Section</div>
+                    </div>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label" id="profile-role">Student</div>
+                        <div class="setting-desc">Account Role</div>
+                    </div>
+                    <span class="badge-pill info">Active</span>
+                </div>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div class="settings-card animate-in">
+                <h3>🔔 Notification Preferences</h3>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Fee Reminders</div>
+                        <div class="setting-desc">Get notified about pending fee payments</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Attendance Alerts</div>
+                        <div class="setting-desc">Alert when attendance drops below 80%</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Exam Results</div>
+                        <div class="setting-desc">Get notified when new results are published</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Homework Updates</div>
+                        <div class="setting-desc">Receive new homework and assignment notifications</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Announcements</div>
+                        <div class="setting-desc">Receive school announcements</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Dashboard Preferences -->
+            <div class="settings-card animate-in">
+                <h3>📊 Dashboard Preferences</h3>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Auto-Refresh Data</div>
+                        <div class="setting-desc">Automatically refresh dashboard data every 10 seconds</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked id="auto-refresh-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Show Charts</div>
+                        <div class="setting-desc">Display analytics charts on dashboard</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Show Activity Feed</div>
+                        <div class="setting-desc">Display recent activity on dashboard</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Session -->
+            <div class="settings-card animate-in">
+                <h3>🔒 Session & Security</h3>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Active Session</div>
+                        <div class="setting-desc" id="session-info">Current browser session</div>
+                    </div>
+                    <span class="badge-pill success">Connected</span>
+                </div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Sign Out</div>
+                        <div class="setting-desc">End your current session and sign out</div>
+                    </div>
+                    <button id="settings-logout"
+                        style="padding:8px 20px; border-radius:10px; border:1px solid var(--danger-500); background:var(--danger-50); color:var(--danger-500); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Version -->
+            <div style="text-align:center; padding:24px; color:var(--surface-700); opacity:0.4; font-size:12px;">
+                EduPortal Student Dashboard v2.0 • © 2026
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        if (!api.requireAuth()) window.location.href = 'login.html';
+
+        const info = api.getUserInfo();
+        document.getElementById('user-display-name').textContent = info.name;
+        document.getElementById('user-role').textContent = `Class ${info.class || '-'}`;
+        document.getElementById('user-avatar').textContent = info.initial;
+        document.getElementById('profile-name').textContent = info.name;
+        document.getElementById('profile-email').textContent = info.email;
+        document.getElementById('profile-class').textContent = info.class ? `Class ${info.class} ${info.section || ''}` : '—';
+        document.getElementById('profile-role').textContent = info.role;
+
+        document.getElementById('logout-btn').addEventListener('click', (e) => { e.preventDefault(); api.logout(); });
+        document.getElementById('settings-logout').addEventListener('click', () => api.logout());
+
+        // Toast helper
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('show'));
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // Save preferences to localStorage
+        document.querySelectorAll('.toggle input').forEach(toggle => {
+            toggle.addEventListener('change', () => {
+                showToast('Preference saved', 'success');
+            });
+        });
+    </script>
+</body>
+
+</html>

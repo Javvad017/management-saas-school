@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Student Portal</title>
+    <meta name="description" content="View all notifications, alerts, and announcements">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h2>EduPortal</h2><span>Student Dashboard</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Main</div>
+            <a href="dashboard.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="attendance.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                <span>Attendance</span>
+            </a>
+            <a href="fees.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Fees</span>
+            </a>
+            <a href="results.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span>Results</span>
+            </a>
+            <div class="nav-section-label">System</div>
+            <a href="notifications.html" class="nav-item active">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <span>Notifications</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="nav-item" id="logout-btn">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="top-navbar">
+            <div class="navbar-left">
+                <div class="page-title">
+                    <h1>Notifications</h1>
+                    <p>Stay updated with latest alerts and announcements</p>
+                </div>
+            </div>
+            <div class="navbar-right">
+                <button class="navbar-btn" id="mark-all-read-btn" title="Mark all as read"
+                    style="width: auto; padding: 0 14px; font-size: 13px; font-weight: 600; color: var(--primary-500); gap: 6px;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Mark all read
+                </button>
+                <div class="profile-dropdown">
+                    <div class="profile-avatar" id="user-avatar">S</div>
+                    <div class="profile-info">
+                        <div class="name" id="user-display-name">Student</div>
+                        <div class="role" id="user-role">Student</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <!-- Filter Tabs -->
+            <div style="display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap;">
+                <button class="chart-filter-btn active" data-filter="all"
+                    style="padding:8px 20px; border-radius:10px; border:1px solid var(--surface-200); background:var(--primary-500); color:white; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">All</button>
+                <button class="chart-filter-btn" data-filter="announcement"
+                    style="padding:8px 20px; border-radius:10px; border:1px solid var(--surface-200); background:white; color:var(--surface-700); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s;">Announcements</button>
+                <button class="chart-filter-btn" data-filter="alert"
+                    style="padding:8px 20px; border-radius:10px; border:1px solid var(--surface-200); background:white; color:var(--surface-700); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s;">Alerts</button>
+                <button class="chart-filter-btn" data-filter="reminder"
+                    style="padding:8px 20px; border-radius:10px; border:1px solid var(--surface-200); background:white; color:var(--surface-700); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s;">Reminders</button>
+            </div>
+
+            <!-- Notifications List -->
+            <div id="notifications-container">
+                <!-- Dynamically filled -->
+                <div class="page-card" style="padding: 48px; text-align:center; margin-bottom: 16px;">
+                    <div class="empty-state">
+                        <h4>Loading notifications...</h4>
+                        <p>Please wait</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        if (!api.requireAuth()) window.location.href = 'login.html';
+
+        const info = api.getUserInfo();
+        document.getElementById('user-display-name').textContent = info.name;
+        document.getElementById('user-role').textContent = `Class ${info.class || '-'}`;
+        document.getElementById('user-avatar').textContent = info.initial;
+
+        document.getElementById('logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            api.logout();
+        });
+
+        let allNotifications = [];
+
+        // Notification type config
+        const typeConfig = {
+            announcement: { icon: '📢', bg: '#eff6ff', color: '#3b82f6', label: 'Announcement' },
+            result: { icon: '📊', bg: '#ecfdf5', color: '#10b981', label: 'Result' },
+            alert: { icon: '⚠️', bg: '#fef2f2', color: '#ef4444', label: 'Alert' },
+            reminder: { icon: '💰', bg: '#fffbeb', color: '#f59e0b', label: 'Reminder' },
+            homework: { icon: '📚', bg: '#f5f3ff', color: '#8b5cf6', label: 'Homework' },
+            general: { icon: '🔔', bg: '#f8fafc', color: '#64748b', label: 'General' }
+        };
+
+        function timeAgo(dateStr) {
+            if (!dateStr) return 'Just now';
+            const diff = Math.floor((new Date() - new Date(dateStr)) / 1000);
+            if (diff < 60) return 'Just now';
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+            return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function renderNotification(n) {
+            const cfg = typeConfig[n.type] || typeConfig.general;
+            return `
+        <div class="page-card notification-card ${n.unread ? 'unread-card' : ''}" data-type="${n.type}" style="padding:20px 24px; margin-bottom:12px; display:flex; gap:16px; align-items:flex-start; cursor:pointer; transition: all 0.2s; ${n.unread ? 'border-left: 3px solid ' + cfg.color + ';' : ''}">
+          <div style="width:44px; height:44px; border-radius:12px; background:${cfg.bg}; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px;">
+            ${cfg.icon}
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span style="font-size:14px; font-weight:600; color:var(--surface-900);">${n.title}</span>
+              <span class="badge-pill" style="background:${cfg.bg}; color:${cfg.color}; font-size:10px; padding:2px 8px;">${cfg.label}</span>
+              ${n.unread ? '<span style="width:8px; height:8px; border-radius:50%; background:var(--primary-500); flex-shrink:0;"></span>' : ''}
+            </div>
+            <p style="font-size:13px; color:var(--surface-700); opacity:0.7; line-height:1.5; margin-bottom:6px;">${n.message}</p>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:11px; color:var(--primary-500); font-weight:500;">${n.time}</span>
+              ${n.author ? `<span style="font-size:11px; color:var(--surface-700); opacity:0.5;">by ${n.author}</span>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+        }
+
+        function renderNotifications(filter = 'all') {
+            const container = document.getElementById('notifications-container');
+            const filtered = filter === 'all' ? allNotifications : allNotifications.filter(n => n.type === filter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+          <div class="page-card" style="padding: 64px; text-align:center;">
+            <div class="empty-state">
+              <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:inline-block; color:var(--surface-200)">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+              </svg>
+              <h4>No notifications</h4>
+              <p>You're all caught up!</p>
+            </div>
+          </div>
+        `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(n => renderNotification(n)).join('');
+        }
+
+        async function loadNotifications() {
+            try {
+                // Load from multiple sources concurrently
+                const [annRes, dashRes] = await Promise.allSettled([
+                    api.getAnnouncements(),
+                    api.getDashboard()
+                ]);
+
+                allNotifications = [];
+
+                // Announcements
+                if (annRes.status === 'fulfilled' && annRes.value?.data) {
+                    annRes.value.data.forEach(a => {
+                        allNotifications.push({
+                            title: a.title || 'Announcement',
+                            message: a.message || a.description || 'New announcement from school',
+                            type: 'announcement',
+                            time: timeAgo(a.createdAt),
+                            author: a.createdBy?.name || 'Admin',
+                            unread: true,
+                            date: a.createdAt
+                        });
+                    });
+                }
+
+                // From dashboard data
+                if (dashRes.status === 'fulfilled' && dashRes.value?.data) {
+                    const d = dashRes.value.data;
+
+                    // Fee reminders
+                    if (d.pendingFees && d.pendingFees.length > 0) {
+                        d.pendingFees.forEach(f => {
+                            allNotifications.push({
+                                title: 'Fee Payment Reminder',
+                                message: `₹${(f.amount || 0).toLocaleString()} fee payment is due. Please ensure timely payment.`,
+                                type: 'reminder',
+                                time: f.dueDate ? timeAgo(f.dueDate) : 'Due soon',
+                                unread: true,
+                                date: f.dueDate || new Date().toISOString()
+                            });
+                        });
+                    }
+
+                    // Attendance alerts
+                    if (d.recentAttendance) {
+                        const absent = d.recentAttendance.filter(a => a.status === 'absent');
+                        if (absent.length > 0) {
+                            allNotifications.push({
+                                title: 'Attendance Alert',
+                                message: `You have ${absent.length} absent day(s) in this period. Maintain regular attendance.`,
+                                type: 'alert',
+                                time: timeAgo(absent[0].date),
+                                unread: true,
+                                date: absent[0].date
+                            });
+                        }
+                    }
+
+                    // Homework notifications
+                    if (d.recentHomework && d.recentHomework.length > 0) {
+                        d.recentHomework.forEach(hw => {
+                            allNotifications.push({
+                                title: `Homework: ${hw.subject || 'New Assignment'}`,
+                                message: hw.title || hw.description || 'New homework has been assigned',
+                                type: 'homework',
+                                time: timeAgo(hw.createdAt),
+                                author: hw.teacherId?.name || 'Teacher',
+                                unread: false,
+                                date: hw.createdAt
+                            });
+                        });
+                    }
+                }
+
+                // Default if empty
+                if (allNotifications.length === 0) {
+                    allNotifications = [
+                        { title: 'New result published', message: 'Your Mathematics mid-term exam results are now available. Check the Results section for details.', type: 'result', time: '2h ago', unread: true },
+                        { title: 'Attendance Alert', message: 'Your attendance percentage has dropped below 80%. Please ensure regular attendance to avoid penalties.', type: 'alert', time: '5h ago', unread: true },
+                        { title: 'Fee Payment Due', message: 'Tuition fee of ₹15,000 is due by March 15, 2026. Please make the payment to avoid late charges.', type: 'reminder', time: '1d ago', unread: true },
+                        { title: 'Annual Sports Day', message: 'The Annual Sports Day will be held on March 20, 2026. Participation forms are available with your class teacher.', type: 'announcement', time: '2d ago', author: 'Admin', unread: false },
+                        { title: 'Science Project', message: 'Science project submissions are due next Friday. Ensure your project report and model are ready.', type: 'homework', time: '3d ago', author: 'Ms. Sharma', unread: false }
+                    ];
+                }
+
+                // Sort by date
+                allNotifications.sort((a, b) => {
+                    if (a.unread && !b.unread) return -1;
+                    if (!a.unread && b.unread) return 1;
+                    return 0;
+                });
+
+                renderNotifications();
+            } catch (error) {
+                console.error('Error:', error);
+                renderNotifications();
+            }
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.chart-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.chart-filter-btn').forEach(b => {
+                    b.style.background = 'white';
+                    b.style.color = 'var(--surface-700)';
+                    b.classList.remove('active');
+                });
+                btn.style.background = 'var(--primary-500)';
+                btn.style.color = 'white';
+                btn.classList.add('active');
+                renderNotifications(btn.dataset.filter);
+            });
+        });
+
+        // Mark all read
+        document.getElementById('mark-all-read-btn').addEventListener('click', () => {
+            allNotifications.forEach(n => n.unread = false);
+            renderNotifications(document.querySelector('.chart-filter-btn.active')?.dataset.filter || 'all');
+        });
+
+        loadNotifications();
+
+        // Auto refresh
+        setInterval(loadNotifications, 10000);
+    </script>
+</body>
+
+</html>

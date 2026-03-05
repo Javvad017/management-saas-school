@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Student Portal</title>
+  <meta name="description"
+    content="Student dashboard with real-time analytics, attendance tracking, fee management, and exam results">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h2>EduPortal</h2>
+        <span>Student Dashboard</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item active" id="nav-dashboard">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="attendance.html" class="nav-item" id="nav-attendance">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+        <span>Attendance</span>
+      </a>
+      <a href="fees.html" class="nav-item" id="nav-fees">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Fees</span>
+      </a>
+      <a href="results.html" class="nav-item" id="nav-results">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span>Results</span>
+      </a>
+
+      <div class="nav-section-label">System</div>
+      <a href="notifications.html" class="nav-item" id="nav-notifications">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <span>Notifications</span>
+        <span class="nav-badge" id="nav-notif-badge">3</span>
+      </a>
+      <a href="settings.html" class="nav-item" id="nav-settings">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#" class="nav-item" id="logout-btn">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN WRAPPER ============ -->
+  <div class="main-wrapper">
+
+    <!-- ============ TOP NAVBAR ============ -->
+    <header class="top-navbar">
+      <div class="navbar-left">
+        <div class="page-title">
+          <h1>Dashboard</h1>
+          <p>Welcome back, <span id="welcome-name">Student</span></p>
+        </div>
+      </div>
+
+      <div class="navbar-right">
+        <!-- Live refresh indicator -->
+        <div class="refresh-ribbon">
+          <span class="pulse-dot"></span>
+          <span id="last-refresh">Live</span>
+        </div>
+
+        <!-- Notification Bell -->
+        <div style="position: relative;">
+          <button class="navbar-btn" id="notification-bell" aria-label="Notifications">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span class="badge" id="notif-badge-count">3</span>
+          </button>
+
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notification-dropdown">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <button class="mark-read" id="mark-all-read">Mark all read</button>
+            </div>
+            <div class="notification-list" id="notification-list">
+              <!-- Filled dynamically by JS -->
+            </div>
+            <div class="notification-footer">
+              <a href="notifications.html">View all notifications →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Dropdown -->
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="profile-avatar" id="user-avatar">S</div>
+          <div class="profile-info">
+            <div class="name" id="user-display-name">Student</div>
+            <div class="role" id="user-role">Student</div>
+          </div>
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="opacity:0.4">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ CONTENT AREA ============ -->
+    <main class="content-area">
+
+      <!-- ===== STATS CARDS ===== -->
+      <div class="stats-grid">
+        <!-- Attendance Card -->
+        <div class="stat-card emerald animate-in" id="card-attendance">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <span class="stat-trend up" id="attendance-trend-badge">↑ Good</span>
+          </div>
+          <div class="stat-value" id="attendance-percentage">87%</div>
+          <div class="stat-label">Attendance Rate</div>
+        </div>
+
+        <!-- Fees Due Card -->
+        <div class="stat-card amber animate-in" id="card-fees">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <span class="stat-trend down" id="fees-trend-badge">2 pending</span>
+          </div>
+          <div class="stat-value" id="fees-due-amount">₹15,000</div>
+          <div class="stat-label">Fees Due</div>
+        </div>
+
+        <!-- Subjects Card -->
+        <div class="stat-card violet animate-in" id="card-subjects">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <span class="stat-trend neutral" id="subjects-trend-badge">This semester</span>
+          </div>
+          <div class="stat-value" id="subjects-count">5</div>
+          <div class="stat-label">Subjects Enrolled</div>
+        </div>
+
+        <!-- Exams Card -->
+        <div class="stat-card sky animate-in" id="card-exams">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <span class="stat-trend neutral" id="exams-trend-badge">This month</span>
+          </div>
+          <div class="stat-value" id="exams-count">2</div>
+          <div class="stat-label">Upcoming Exams</div>
+        </div>
+      </div>
+
+      <!-- ===== CHARTS ROW ===== -->
+      <div class="charts-grid">
+        <!-- Attendance Line Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Attendance Overview</div>
+              <div class="chart-subtitle">Last 14 days attendance trend</div>
+            </div>
+            <div class="chart-filter">
+              <button class="active">2W</button>
+              <button>1M</button>
+              <button>3M</button>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="attendanceChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Fees Doughnut Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Fee Status</div>
+              <div class="chart-subtitle">Payment breakdown</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="feesChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PERFORMANCE CHART + ACTIVITY ===== -->
+      <div class="bottom-grid">
+        <!-- Performance Bar Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Subject Performance</div>
+              <div class="chart-subtitle">Average marks by subject</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="performanceChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="activity-card">
+          <div class="card-header">
+            <h3>Recent Activity</h3>
+            <a href="notifications.html" class="view-all">View all →</a>
+          </div>
+          <div id="activity-feed">
+            <!-- Filled dynamically by JS -->
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#ecfdf5">
+                <svg class="w-5 h-5" style="color:#10b981" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="activity-info">
+                <div class="activity-title">Loading activity feed...</div>
+                <div class="activity-desc">Please wait</div>
+              </div>
+              <span class="activity-time">...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script>
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      dashboard.init();
+    });
+  </script>
+</body>
+
+</html>

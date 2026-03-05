@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance - Student Portal</title>
+  <meta name="description" content="View your attendance records and track your attendance percentage">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h2>EduPortal</h2>
+        <span>Student Dashboard</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="attendance.html" class="nav-item active">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+        <span>Attendance</span>
+      </a>
+      <a href="fees.html" class="nav-item">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Fees</span>
+      </a>
+      <a href="results.html" class="nav-item">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span>Results</span>
+      </a>
+      <div class="nav-section-label">System</div>
+      <a href="notifications.html" class="nav-item">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <span>Notifications</span>
+      </a>
+      <a href="settings.html" class="nav-item">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" class="nav-item" id="logout-btn">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN WRAPPER ============ -->
+  <div class="main-wrapper">
+    <header class="top-navbar">
+      <div class="navbar-left">
+        <div class="page-title">
+          <h1>Attendance</h1>
+          <p>Track your attendance records</p>
+        </div>
+      </div>
+      <div class="navbar-right">
+        <div class="profile-dropdown">
+          <div class="profile-avatar" id="user-avatar">S</div>
+          <div class="profile-info">
+            <div class="name" id="user-display-name">Student</div>
+            <div class="role" id="user-role">Student</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content-area">
+      <!-- Stats Row -->
+      <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-card sky animate-in">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="total-days">0</div>
+          <div class="stat-label">Total Days</div>
+        </div>
+        <div class="stat-card emerald animate-in">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="present-days" style="color: var(--success-500);">0</div>
+          <div class="stat-label">Days Present</div>
+        </div>
+        <div class="stat-card amber animate-in">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="absent-days" style="color: var(--danger-500);">0</div>
+          <div class="stat-label">Days Absent</div>
+        </div>
+      </div>
+
+      <!-- Attendance Chart -->
+      <div class="chart-card" style="margin-bottom: 24px;">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Attendance Trend</div>
+            <div class="chart-subtitle">Your attendance over time</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="attendanceTrendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Records Table -->
+      <div class="page-card">
+        <div class="card-top">
+          <h3>Attendance Records</h3>
+          <span class="badge-pill info" id="attendance-percentage-badge">0%</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Day</th>
+                <th style="text-align:center">Status</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="attendance-tbody">
+              <tr>
+                <td colspan="4" style="text-align:center; padding: 48px 20px;">
+                  <div class="empty-state">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:inline-block">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    <h4>Loading records...</h4>
+                    <p>Please wait while we fetch your attendance</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    // Auth check
+    if (!api.requireAuth()) window.location.href = 'login.html';
+
+    // Set user info
+    const info = api.getUserInfo();
+    document.getElementById('user-display-name').textContent = info.name;
+    document.getElementById('user-role').textContent = `Class ${info.class || '-'}`;
+    document.getElementById('user-avatar').textContent = info.initial;
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      api.logout();
+    });
+
+    // Load attendance
+    async function loadAttendance() {
+      try {
+        const data = await api.getAttendance();
+        if (!data?.data) return;
+
+        const att = data.data;
+        const stats = att.stats || {};
+
+        document.getElementById('total-days').textContent = stats.totalDays || 0;
+        document.getElementById('present-days').textContent = stats.presentDays || 0;
+        document.getElementById('absent-days').textContent = stats.absentDays || 0;
+        document.getElementById('attendance-percentage-badge').textContent = (stats.percentage || 0) + '%';
+
+        // Build chart
+        if (att.attendance && att.attendance.length > 0) {
+          const sorted = [...att.attendance].sort((a, b) => new Date(a.date) - new Date(b.date));
+          const last30 = sorted.slice(-30);
+          const ctx = document.getElementById('attendanceTrendChart');
+          if (ctx) {
+            new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: last30.map(r => new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+                datasets: [{
+                  label: 'Attendance',
+                  data: last30.map(r => r.status === 'present' ? 1 : 0),
+                  borderColor: '#6366f1',
+                  backgroundColor: 'rgba(99,102,241,0.1)',
+                  borderWidth: 2.5,
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 3,
+                  pointBackgroundColor: last30.map(r => r.status === 'present' ? '#10b981' : '#ef4444'),
+                  pointBorderColor: '#fff',
+                  pointBorderWidth: 2,
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false }, tooltip: {
+                    backgroundColor: '#1e293b', cornerRadius: 10, padding: 12,
+                    callbacks: { label: (c) => c.raw === 1 ? 'Present ✓' : 'Absent ✗' }
+                  }
+                },
+                scales: {
+                  x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 11 }, maxTicksLimit: 10 }, border: { display: false } },
+                  y: { min: -0.1, max: 1.3, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#94a3b8', stepSize: 1, callback: v => v === 1 ? 'Present' : v === 0 ? 'Absent' : '' }, border: { display: false } }
+                }
+              }
+            });
+          }
+        }
+
+        // Build table
+        const tbody = document.getElementById('attendance-tbody');
+        if (att.attendance && att.attendance.length > 0) {
+          tbody.innerHTML = att.attendance.map(record => `
+            <tr>
+              <td>${new Date(record.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+              <td>${new Date(record.date).toLocaleDateString('en-US', { weekday: 'long' })}</td>
+              <td style="text-align:center">
+                <span class="badge-pill ${record.status === 'present' ? 'success' : 'danger'}">
+                  ${record.status === 'present' ? '✓ Present' : '✗ Absent'}
+                </span>
+              </td>
+              <td>${record.remarks || '—'}</td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:48px"><div class="empty-state"><h4>No records found</h4><p>No attendance data available yet</p></div></td></tr>`;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('attendance-tbody').innerHTML = `<tr><td colspan="4" style="text-align:center; padding:48px; color:var(--danger-500);">Failed to load attendance</td></tr>`;
+      }
+    }
+
+    loadAttendance();
+  </script>
+</body>
+
+</html>

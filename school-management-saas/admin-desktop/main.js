@@ -11,7 +11,9 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile('index.html');
+  // Check if user is logged in
+  const token = null; // Will be checked in renderer
+  mainWindow.loadFile('index.html'); // Login page first, then redirects to dashboard.html
   
   // Open DevTools in development
   if (process.argv.includes('--dev')) {
