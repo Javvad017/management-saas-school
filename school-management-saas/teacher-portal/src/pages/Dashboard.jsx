@@ -4,7 +4,7 @@ function Dashboard({ user, setUser }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     setUser(null);
     navigate('/login');
   };

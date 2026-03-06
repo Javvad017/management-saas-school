@@ -18,7 +18,7 @@ class StudentAPI {
   async getMyAttendance(startDate, endDate) {
     try {
       console.log('Fetching attendance...', { startDate, endDate });
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(sessionStorage.getItem('user'));
       
       const params = {};
       if (user && user._id) {
@@ -40,7 +40,7 @@ class StudentAPI {
   async getAttendancePercentage(startDate, endDate) {
     try {
       console.log('Fetching attendance percentage...', { startDate, endDate });
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(sessionStorage.getItem('user'));
       
       if (!user || !user._id) {
         throw new Error('User ID not found');
@@ -69,7 +69,7 @@ class StudentAPI {
   async getMyFees() {
     try {
       console.log('Fetching fees...');
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(sessionStorage.getItem('user'));
       
       const params = {};
       if (user && user._id) {
@@ -89,7 +89,7 @@ class StudentAPI {
   async getFeeSummary() {
     try {
       console.log('Fetching fee summary...');
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(sessionStorage.getItem('user'));
       
       if (!user || !user._id) {
         throw new Error('User ID not found');
@@ -114,7 +114,7 @@ class StudentAPI {
   async getMyResults() {
     try {
       console.log('Fetching results...');
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(sessionStorage.getItem('user'));
       
       if (!user || !user._id) {
         throw new Error('User ID not found');

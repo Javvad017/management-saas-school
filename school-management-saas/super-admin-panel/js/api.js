@@ -2,7 +2,7 @@ const API_BASE = 'http://localhost:5000/api';
 
 class APIService {
     async request(endpoint, method = 'GET', data = null) {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         
         const options = {
             method,

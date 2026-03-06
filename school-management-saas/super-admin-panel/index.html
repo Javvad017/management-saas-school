@@ -6,7 +6,7 @@
     <title>Super Admin Panel</title>
     <script>
         // Redirect to login or dashboard
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         window.location.href = token ? 'dashboard.html' : 'login.html';
     </script>
 </head>

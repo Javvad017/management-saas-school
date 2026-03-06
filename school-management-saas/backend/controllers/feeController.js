@@ -61,6 +61,42 @@ export const payFee = asyncHandler(async (req, res, next) => {
   }
 });
 
+// @desc    Update fee
+// @route   PUT /api/fees/:id
+// @access  Private/SchoolAdmin
+export const updateFee = asyncHandler(async (req, res, next) => {
+  const schoolId = req.user.schoolId;
+
+  try {
+    const fee = await feeService.updateFee(req.params.id, schoolId, req.body);
+
+    res.status(200).json({
+      success: true,
+      data: fee
+    });
+  } catch (error) {
+    return next(new ErrorResponse(error.message, 400));
+  }
+});
+
+// @desc    Delete fee
+// @route   DELETE /api/fees/:id
+// @access  Private/SchoolAdmin
+export const deleteFee = asyncHandler(async (req, res, next) => {
+  const schoolId = req.user.schoolId;
+
+  try {
+    await feeService.deleteFee(req.params.id, schoolId);
+
+    res.status(200).json({
+      success: true,
+      data: {}
+    });
+  } catch (error) {
+    return next(new ErrorResponse(error.message, 400));
+  }
+});
+
 // @desc    Get unpaid students
 // @route   GET /api/fees/unpaid
 // @access  Private/SchoolAdmin

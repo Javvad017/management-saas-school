@@ -7,8 +7,8 @@ const API_BASE = 'http://localhost:5000/api';
 
 class ApiService {
     constructor() {
-        this.token = localStorage.getItem('token');
-        this.user = JSON.parse(localStorage.getItem('user') || '{}');
+        this.token = sessionStorage.getItem('token');
+        this.user = JSON.parse(sessionStorage.getItem('user') || '{}');
         this.refreshInterval = null;
     }
 
@@ -83,31 +83,31 @@ class ApiService {
     // ==================== STUDENT ENDPOINTS ====================
 
     async getDashboard() {
-        return this.request('/student-portal/dashboard');
+        return this.request('/student/dashboard');
     }
 
     async getAttendance() {
-        return this.request('/student-portal/attendance');
+        return this.request('/student/attendance');
     }
 
     async getFees() {
-        return this.request('/student-portal/fees');
+        return this.request('/student/fees');
     }
 
     async getResults() {
-        return this.request('/student-portal/results');
+        return this.request('/student/results');
     }
 
     async getProfile() {
-        return this.request('/student-portal/profile');
+        return this.request('/student/profile');
     }
 
     async getHomework() {
-        return this.request('/student-portal/homework');
+        return this.request('/student/homework');
     }
 
     async getAnnouncements() {
-        return this.request('/student-portal/announcements');
+        return this.request('/student/announcements');
     }
 
     // ==================== TEACHER ENDPOINTS ====================
@@ -171,8 +171,8 @@ class ApiService {
 
     /** Logout and clear storage */
     logout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
         if (this.refreshInterval) clearInterval(this.refreshInterval);
         window.location.href = this.getLoginPath();
     }

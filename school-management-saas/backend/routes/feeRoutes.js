@@ -5,7 +5,9 @@ import {
   payFee,
   getUnpaidStudents,
   getStudentFeeSummary,
-  createBulkFees
+  createBulkFees,
+  updateFee,
+  deleteFee
 } from '../controllers/feeController.js';
 import { protect, authorize } from '../middlewares/auth.js';
 
@@ -20,5 +22,7 @@ router.post('/bulk', protect, authorize('SchoolAdmin'), createBulkFees);
 router.get('/unpaid', protect, authorize('SchoolAdmin'), getUnpaidStudents);
 router.get('/summary/:studentId', protect, getStudentFeeSummary);
 router.put('/:id/pay', protect, authorize('SchoolAdmin'), payFee);
+router.put('/:id', protect, authorize('SchoolAdmin'), updateFee);
+router.delete('/:id', protect, authorize('SchoolAdmin'), deleteFee);
 
 export default router;

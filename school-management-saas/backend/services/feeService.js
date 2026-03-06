@@ -12,13 +12,17 @@ class FeeService {
       throw new Error('Student not found');
     }
 
+    // Derive month/year if not provided
+    const feeMonth = month || new Date(dueDate).toLocaleString('default', { month: 'long' });
+    const feeYear = year || new Date(dueDate).getFullYear();
+
     // Check if fee already exists for this month/year/type
     const existingFee = await Fee.findOne({
       studentId,
       schoolId,
       feeType,
-      month,
-      year
+      month: feeMonth,
+      year: feeYear
     });
 
     if (existingFee) {
@@ -31,8 +35,8 @@ class FeeService {
       amount,
       dueDate,
       feeType,
-      month,
-      year,
+      month: feeMonth,
+      year: feeYear,
       paidAmount: 0,
       status: 'Pending'
     });
@@ -74,23 +78,54 @@ class FeeService {
     // Update paid amount
     fee.paidAmount += paidAmount;
 
-    // Calculate due amount
-    const dueAmount = fee.amount - fee.paidAmount;
-
-    // Update status
-    if (fee.paidAmount >= fee.amount) {
-      fee.status = 'Paid';
-      fee.paymentDate = new Date();
-    } else if (fee.paidAmount > 0) {
-      fee.status = 'Pending';
-    }
-
+    // Status will be updated by pre-save hook
     await fee.save();
 
     return {
       ...fee.toObject(),
-      dueAmount
+      dueAmount: fee.getRemainingAmount()
     };
+  }
+
+  // Update fee
+  async updateFee(feeId, schoolId, feeData) {
+    let fee = await Fee.findOne({ _id: feeId, schoolId });
+    if (!fee) {
+      throw new Error('Fee record not found');
+    }
+
+    // Special logic if updating status to 'Paid'
+    if (feeData.status === 'Paid' && fee.status !== 'Paid') {
+      feeData.paidAmount = fee.amount;
+      feeData.paymentDate = new Date();
+    }
+
+    if (feeData.status === 'Pending' && fee.status !== 'Pending') {
+      feeData.paidAmount = 0;
+      feeData.paymentDate = null;
+    }
+
+    fee = await Fee.findByIdAndUpdate(
+      feeId,
+      feeData,
+      { new: true, runValidators: true }
+    ).populate({
+      path: 'studentId',
+      populate: { path: 'userId', select: 'name' }
+    });
+
+    return fee;
+  }
+
+  // Delete fee
+  async deleteFee(feeId, schoolId) {
+    const fee = await Fee.findOne({ _id: feeId, schoolId });
+    if (!fee) {
+      throw new Error('Fee record not found');
+    }
+
+    await Fee.deleteOne({ _id: feeId });
+    return true;
   }
 
   // Get unpaid students

@@ -21,8 +21,8 @@ function Login({ setUser }) {
         return;
       }
 
-      localStorage.setItem('token', data.data.token);
-      localStorage.setItem('user', JSON.stringify(data.data));
+      sessionStorage.setItem('token', data.data.token);
+      sessionStorage.setItem('user', JSON.stringify(data.data));
       setUser(data.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');

@@ -15,8 +15,8 @@ const Login = () => {
 
     try {
       const { data } = await authAPI.login(credentials);
-      localStorage.setItem('token', data.data.token);
-      localStorage.setItem('user', JSON.stringify(data.data));
+      sessionStorage.setItem('token', data.data.token);
+      sessionStorage.setItem('user', JSON.stringify(data.data));
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');

@@ -1,5 +1,5 @@
 function checkAuth() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const currentPage = window.location.pathname;
     
     if (!token && !currentPage.includes('login.html')) {
@@ -11,13 +11,13 @@ function checkAuth() {
 }
 
 function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     window.location.href = 'login.html';
 }
 
 function getUser() {
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
 }
 

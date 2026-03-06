@@ -6,7 +6,7 @@
 const API_BASE = 'http://localhost:5000/api';
 
 // ============ STATE ============
-let reportsToken = localStorage.getItem('token');
+let reportsToken = sessionStorage.getItem('token');
 let reportsRefreshInterval = null;
 let currentReportData = null;
 let currentReportType = null;
@@ -21,7 +21,7 @@ async function reportsApiFetch(endpoint) {
         }
     });
     if (response.status === 401) {
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         window.location.href = '../index.html';
         return null;
     }

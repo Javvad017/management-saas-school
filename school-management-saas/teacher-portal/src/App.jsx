@@ -11,7 +11,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       authAPI.getMe()
         .then(({ data }) => {
@@ -19,7 +19,7 @@ function App() {
           setLoading(false);
         })
         .catch(() => {
-          localStorage.clear();
+          sessionStorage.clear();
           setLoading(false);
         });
     } else {

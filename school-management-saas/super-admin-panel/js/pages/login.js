@@ -17,8 +17,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             throw new Error('Access denied. Super Admin only.');
         }
 
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data));
+        sessionStorage.setItem('token', response.data.token);
+        sessionStorage.setItem('user', JSON.stringify(response.data));
         window.location.href = 'dashboard.html';
     } catch (error) {
         errorDiv.textContent = error.message;

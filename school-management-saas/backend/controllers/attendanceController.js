@@ -1,6 +1,8 @@
 import attendanceService from '../services/attendanceService.js';
 import { asyncHandler } from '../middlewares/asyncHandler.js';
 import ErrorResponse from '../utils/errorResponse.js';
+import { emitToSchool } from '../utils/socket.js';
+import logger from '../utils/logger.js';
 
 // @desc    Mark attendance
 // @route   POST /api/attendance/mark
@@ -30,6 +32,15 @@ export const markAttendance = asyncHandler(async (req, res, next) => {
     }
 
     const result = await attendanceService.markAttendance(normalizedBody, schoolId, markedBy);
+
+    // Emit real-time event to school
+    emitToSchool(schoolId, 'attendance:updated', {
+      date: normalizedBody.date,
+      count: result.attendanceRecords.length,
+      markedBy: req.user.name
+    });
+
+    logger.info(`Attendance marked by ${req.user.email} for ${result.attendanceRecords.length} students`);
 
     res.status(201).json({
       success: true,

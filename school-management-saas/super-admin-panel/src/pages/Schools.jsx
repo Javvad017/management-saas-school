@@ -38,7 +38,7 @@ function Schools({ user, setUser }) {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     setUser(null);
     navigate('/login');
   };

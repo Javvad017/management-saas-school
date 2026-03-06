@@ -64,7 +64,7 @@
     const API_BASE = 'http://localhost:5000/api';
 
     // Check if already logged in
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       window.location.href = 'pages/dashboard.html';
     }
@@ -103,8 +103,8 @@
         }
 
         // Save auth data
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data));
+        sessionStorage.setItem('token', data.data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.data));
 
         // Redirect to dashboard
         window.location.href = 'pages/dashboard.html';

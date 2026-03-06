@@ -8,6 +8,8 @@ class DashboardManager {
         this.notifications = [];
         this.lastRefresh = null;
         this.isLoading = false;
+        this.socket = null;
+        this.refreshInterval = null;
     }
 
     /** Initialize dashboard */
@@ -18,20 +20,141 @@ class DashboardManager {
         this.setupNotificationToggle();
         await this.loadDashboardData();
         this.startAutoRefresh();
+        this.initSocketIO();
+    }
+
+    /** Initialize Socket.IO for real-time updates */
+    initSocketIO() {
+        const token = sessionStorage.getItem('token');
+        if (!token) return;
+
+        try {
+            // Load Socket.IO from CDN if not already loaded
+            if (typeof io === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.socket.io/4.5.4/socket.io.min.js';
+                script.onload = () => this.connectSocket(token);
+                document.head.appendChild(script);
+            } else {
+                this.connectSocket(token);
+            }
+        } catch (error) {
+            console.error('Socket.IO initialization error:', error);
+        }
+    }
+
+    /** Connect to Socket.IO server */
+    connectSocket(token) {
+        try {
+            this.socket = io('http://localhost:5000', {
+                auth: { token }
+            });
+
+            this.socket.on('connect', () => {
+                console.log('✅ Socket.IO connected');
+                this.showToast('Connected to real-time updates', 'success');
+            });
+
+            this.socket.on('disconnect', () => {
+                console.log('❌ Socket.IO disconnected');
+            });
+
+            // Listen for real-time events
+            this.socket.on('attendanceUpdated', (data) => {
+                console.log('📊 Attendance updated:', data);
+                this.showToast('Attendance record updated', 'info');
+                this.loadDashboardData();
+            });
+
+            this.socket.on('newHomework', (data) => {
+                console.log('📚 New homework:', data);
+                this.showToast(`New homework: ${data.subject}`, 'info');
+                this.loadDashboardData();
+            });
+
+            this.socket.on('examResultsPublished', (data) => {
+                console.log('📝 Exam results published:', data);
+                this.showToast('New exam results available!', 'success');
+                this.loadDashboardData();
+            });
+
+            this.socket.on('feeUpdated', (data) => {
+                console.log('💰 Fee updated:', data);
+                this.showToast('Fee status updated', 'info');
+                this.loadDashboardData();
+            });
+
+            this.socket.on('newAnnouncement', (data) => {
+                console.log('📢 New announcement:', data);
+                this.showToast(`New announcement: ${data.title}`, 'info');
+                this.loadDashboardData();
+            });
+
+        } catch (error) {
+            console.error('Socket connection error:', error);
+        }
+    }
+
+    /** Show toast notification */
+    showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const colors = {
+            success: 'bg-green-500',
+            error: 'bg-red-500',
+            warning: 'bg-amber-500',
+            info: 'bg-blue-500'
+        };
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${colors[type] || colors.info}`;
+        toast.style.cssText = 'padding: 12px 20px; margin-bottom: 10px; border-radius: 8px; color: white; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease;';
+        toast.textContent = message;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 
     /** Set user info in navbar */
-    setupUserInfo() {
-        const info = api.getUserInfo();
-        const nameEl = document.getElementById('user-display-name');
-        const roleEl = document.getElementById('user-role');
-        const avatarEl = document.getElementById('user-avatar');
-        const welcomeEl = document.getElementById('welcome-name');
+    async setupUserInfo() {
+        try {
+            const profileRes = await api.getProfile();
+            if (profileRes?.success && profileRes.data) {
+                const student = profileRes.data;
+                const user = api.getUserInfo();
+                
+                const nameEl = document.getElementById('user-display-name');
+                const roleEl = document.getElementById('user-role');
+                const avatarEl = document.getElementById('user-avatar');
+                const welcomeEl = document.getElementById('welcome-name');
 
-        if (nameEl) nameEl.textContent = info.name;
-        if (roleEl) roleEl.textContent = `Class ${info.class || '-'} ${info.section || ''}`.trim();
-        if (avatarEl) avatarEl.textContent = info.initial;
-        if (welcomeEl) welcomeEl.textContent = info.name;
+                const displayName = user.name || 'Student';
+                const classInfo = `Class ${student.class || ''} ${student.section || ''}`.trim();
+
+                if (nameEl) nameEl.textContent = displayName;
+                if (roleEl) roleEl.textContent = classInfo;
+                if (avatarEl) avatarEl.textContent = displayName.charAt(0).toUpperCase();
+                if (welcomeEl) welcomeEl.textContent = displayName;
+            }
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            // Fallback to stored user info
+            const info = api.getUserInfo();
+            const nameEl = document.getElementById('user-display-name');
+            const roleEl = document.getElementById('user-role');
+            const avatarEl = document.getElementById('user-avatar');
+            const welcomeEl = document.getElementById('welcome-name');
+
+            if (nameEl) nameEl.textContent = info.name;
+            if (roleEl) roleEl.textContent = 'Student';
+            if (avatarEl) avatarEl.textContent = info.initial;
+            if (welcomeEl) welcomeEl.textContent = info.name;
+        }
     }
 
     /** Setup logout handler */
@@ -81,48 +204,88 @@ class DashboardManager {
 
         try {
             // Fetch all data concurrently
-            const [dashRes, attendRes, feesRes, resultsRes] = await Promise.allSettled([
+            const [dashRes, attendRes, feesRes, resultsRes, homeworkRes] = await Promise.allSettled([
                 api.getDashboard(),
                 api.getAttendance(),
                 api.getFees(),
-                api.getResults()
+                api.getResults(),
+                api.getHomework()
             ]);
 
             // Process dashboard data
-            if (dashRes.status === 'fulfilled' && dashRes.value?.data) {
-                this.updateDashboardCards(dashRes.value.data);
-                this.updateActivityFeed(dashRes.value.data);
-                this.updateNotifications(dashRes.value.data);
+            if (dashRes.status === 'fulfilled' && dashRes.value?.success) {
+                const dashData = dashRes.value.data;
+                this.updateDashboardCards(dashData);
+                this.updateActivityFeed(dashData);
+                this.updateNotifications(dashData);
             }
 
-            // Process attendance for chart
-            if (attendRes.status === 'fulfilled' && attendRes.value?.data) {
+            // Process attendance for chart and stats
+            if (attendRes.status === 'fulfilled' && attendRes.value?.success) {
                 const attData = attendRes.value.data;
-                dashboardCharts.updateAttendanceChart(attData.attendance || []);
-
-                // Also update stats if dashboard didn't have them
+                
+                // Update attendance percentage
                 if (attData.stats) {
-                    this.updateElement('attendance-percentage', attData.stats.percentage + '%');
-                    this.updateElement('present-count', attData.stats.presentDays);
+                    this.updateElement('attendance-percentage', Math.round(attData.stats.percentage) + '%');
+                    const trend = attData.stats.percentage >= 80 ? '↑ Good' : attData.stats.percentage >= 60 ? '→ Fair' : '↓ Low';
+                    this.updateElement('attendance-trend-badge', trend);
+                    
+                    const trendEl = document.getElementById('attendance-trend-badge');
+                    if (trendEl) {
+                        trendEl.className = 'stat-trend ' + (attData.stats.percentage >= 80 ? 'up' : attData.stats.percentage >= 60 ? 'neutral' : 'down');
+                    }
+                }
+
+                // Update attendance chart
+                if (attData.attendance && attData.attendance.length > 0) {
+                    dashboardCharts.updateAttendanceChart(attData.attendance);
+                } else {
+                    dashboardCharts.createAttendanceChart('attendanceChart');
                 }
             } else {
                 dashboardCharts.createAttendanceChart('attendanceChart');
             }
 
+            // Process fees for chart and stats
+            if (feesRes.status === 'fulfilled' && feesRes.value?.success) {
+                const feesData = feesRes.value.data;
+                
+                if (feesData.summary) {
+                    const pending = feesData.summary.pendingAmount || 0;
+                    const paid = feesData.summary.paidAmount || 0;
+                    
+                    this.updateElement('fees-due-amount', '₹' + pending.toLocaleString());
+                    
+                    const pendingCount = feesData.fees?.filter(f => f.status !== 'Paid').length || 0;
+                    this.updateElement('fees-trend-badge', pendingCount > 0 ? `${pendingCount} pending` : 'All clear');
+                    
+                    // Update fees chart
+                    dashboardCharts.updateFeesChart(paid, pending);
+                } else {
+                    dashboardCharts.createFeesChart('feesChart');
+                }
+            } else {
+                dashboardCharts.createFeesChart('feesChart');
+            }
+
             // Process results for performance chart
-            if (resultsRes.status === 'fulfilled' && resultsRes.value?.data) {
-                dashboardCharts.updatePerformanceChart(resultsRes.value.data);
+            if (resultsRes.status === 'fulfilled' && resultsRes.value?.success) {
+                const results = resultsRes.value.data || [];
+                if (results.length > 0) {
+                    dashboardCharts.updatePerformanceChart(results);
+                } else {
+                    dashboardCharts.createPerformanceChart('performanceChart');
+                }
             } else {
                 dashboardCharts.createPerformanceChart('performanceChart');
             }
 
-            // Process fees for doughnut chart
-            if (feesRes.status === 'fulfilled' && feesRes.value?.data?.summary) {
-                const feesSummary = feesRes.value.data.summary;
-                dashboardCharts.updateFeesChart(feesSummary.paidAmount, feesSummary.pendingAmount);
-                this.updateElement('fees-due-amount', '₹' + (feesSummary.pendingAmount || 0).toLocaleString());
-            } else {
-                dashboardCharts.createFeesChart('feesChart');
+            // Process homework for subjects count
+            if (homeworkRes.status === 'fulfilled' && homeworkRes.value?.success) {
+                const homework = homeworkRes.value.data || [];
+                const subjects = new Set(homework.map(h => h.subject));
+                this.updateElement('subjects-count', subjects.size || '0');
+                this.updateElement('subjects-trend-badge', 'This semester');
             }
 
             this.lastRefresh = new Date();
@@ -130,7 +293,7 @@ class DashboardManager {
 
         } catch (error) {
             console.error('Dashboard load error:', error);
-            // Still init charts with sample data
+            // Initialize charts with sample data on error
             dashboardCharts.createAttendanceChart('attendanceChart');
             dashboardCharts.createPerformanceChart('performanceChart');
             dashboardCharts.createFeesChart('feesChart');
@@ -141,37 +304,53 @@ class DashboardManager {
 
     /** Update stat cards from dashboard API */
     updateDashboardCards(data) {
-        // Attendance percentage
-        if (data.recentAttendance) {
+        // Attendance percentage from recent attendance
+        if (data.recentAttendance && data.recentAttendance.length > 0) {
             const total = data.recentAttendance.length;
-            const present = data.recentAttendance.filter(a => a.status === 'present').length;
+            const present = data.recentAttendance.filter(a => {
+                const status = (a.status || '').toLowerCase();
+                return status === 'present';
+            }).length;
             const rate = total > 0 ? Math.round((present / total) * 100) : 0;
             this.updateElement('attendance-percentage', rate + '%');
-            this.updateElement('attendance-trend', rate >= 80 ? '↑ Good' : '↓ Low');
+            
+            const trend = rate >= 80 ? '↑ Good' : rate >= 60 ? '→ Fair' : '↓ Low';
+            this.updateElement('attendance-trend-badge', trend);
+            
+            const trendEl = document.getElementById('attendance-trend-badge');
+            if (trendEl) {
+                trendEl.className = 'stat-trend ' + (rate >= 80 ? 'up' : rate >= 60 ? 'neutral' : 'down');
+            }
         }
 
-        // Fees due
+        // Fees due from pending fees
         if (data.pendingFees) {
-            const totalPending = data.pendingFees.reduce((sum, f) => sum + (f.amount - (f.paidAmount || 0)), 0);
+            const totalPending = data.pendingFees.reduce((sum, f) => {
+                const amount = f.amount || 0;
+                const paid = f.paidAmount || 0;
+                return sum + (amount - paid);
+            }, 0);
+            
             this.updateElement('fees-due-amount', '₹' + totalPending.toLocaleString());
-            this.updateElement('fees-trend', totalPending > 0 ? `${data.pendingFees.length} pending` : 'All clear');
+            this.updateElement('fees-trend-badge', data.pendingFees.length > 0 ? `${data.pendingFees.length} pending` : 'All clear');
+            
+            const trendEl = document.getElementById('fees-trend-badge');
+            if (trendEl) {
+                trendEl.className = 'stat-trend ' + (data.pendingFees.length > 0 ? 'down' : 'up');
+            }
         }
 
-        // Subjects (from homework data)
-        if (data.recentHomework) {
-            const subjects = new Set(data.recentHomework.map(h => h.subject));
-            this.updateElement('subjects-count', subjects.size || '5');
-            this.updateElement('subjects-trend', 'This semester');
+        // Subjects from homework data
+        if (data.recentHomework && data.recentHomework.length > 0) {
+            const subjects = new Set(data.recentHomework.map(h => h.subject).filter(Boolean));
+            this.updateElement('subjects-count', subjects.size || '0');
+            this.updateElement('subjects-trend-badge', 'This semester');
         }
 
-        // Student info
-        if (data.student) {
-            this.updateElement('student-class-display', `Class ${data.student.class || ''} ${data.student.section || ''}`);
-        }
-
-        // Upcoming exams
-        this.updateElement('exams-count', data.upcomingExams || '2');
-        this.updateElement('exams-trend', 'This month');
+        // Upcoming exams - calculate from current date
+        // For now, show placeholder until we have exam data
+        this.updateElement('exams-count', '0');
+        this.updateElement('exams-trend-badge', 'This month');
     }
 
     /** Update recent activity feed */
@@ -184,11 +363,14 @@ class DashboardManager {
         // Add attendance activity
         if (data.recentAttendance && data.recentAttendance.length > 0) {
             const latest = data.recentAttendance[0];
+            const status = (latest.status || 'Present').toLowerCase();
+            const statusCapitalized = status.charAt(0).toUpperCase() + status.slice(1);
+            
             activities.push({
                 icon: 'check-circle',
-                iconBg: 'bg-emerald-50',
-                iconColor: 'text-emerald-500',
-                title: `Attendance marked: ${latest.status}`,
+                iconBg: status === 'present' ? 'bg-emerald-50' : 'bg-red-50',
+                iconColor: status === 'present' ? 'text-emerald-500' : 'text-red-500',
+                title: `Attendance marked: ${statusCapitalized}`,
                 desc: new Date(latest.date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }),
                 time: this.timeAgo(latest.date)
             });
@@ -197,12 +379,13 @@ class DashboardManager {
         // Add homework activity
         if (data.recentHomework && data.recentHomework.length > 0) {
             data.recentHomework.slice(0, 2).forEach(hw => {
+                const teacherName = hw.teacherId?.name || 'Teacher';
                 activities.push({
                     icon: 'book-open',
                     iconBg: 'bg-violet-50',
                     iconColor: 'text-violet-500',
                     title: `New homework: ${hw.subject || 'Subject'}`,
-                    desc: hw.title || 'Assignment posted',
+                    desc: (hw.title || 'Assignment posted').substring(0, 60) + (hw.title?.length > 60 ? '...' : ''),
                     time: this.timeAgo(hw.createdAt)
                 });
             });
@@ -216,7 +399,7 @@ class DashboardManager {
                     iconBg: 'bg-sky-50',
                     iconColor: 'text-sky-500',
                     title: ann.title || 'Announcement',
-                    desc: ann.message ? ann.message.substring(0, 60) + '...' : 'View details',
+                    desc: ann.message ? ann.message.substring(0, 60) + (ann.message.length > 60 ? '...' : '') : 'View details',
                     time: this.timeAgo(ann.createdAt)
                 });
             });
@@ -224,24 +407,37 @@ class DashboardManager {
 
         // Add fee activity
         if (data.pendingFees && data.pendingFees.length > 0) {
+            const firstFee = data.pendingFees[0];
+            const dueDate = new Date(firstFee.dueDate);
+            const isOverdue = dueDate < new Date();
+            
             activities.push({
                 icon: 'currency',
-                iconBg: 'bg-amber-50',
-                iconColor: 'text-amber-500',
-                title: 'Fee reminder',
-                desc: `₹${data.pendingFees[0].amount?.toLocaleString()} pending`,
-                time: 'Due soon'
+                iconBg: isOverdue ? 'bg-red-50' : 'bg-amber-50',
+                iconColor: isOverdue ? 'text-red-500' : 'text-amber-500',
+                title: isOverdue ? 'Fee overdue!' : 'Fee payment reminder',
+                desc: `₹${(firstFee.amount - (firstFee.paidAmount || 0)).toLocaleString()} - ${firstFee.feeType || 'Fee'}`,
+                time: isOverdue ? 'Overdue' : `Due ${dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
             });
         }
 
-        // Default activities if none from API
+        // Show default message if no activities
         if (activities.length === 0) {
-            activities.push(
-                { icon: 'check-circle', iconBg: 'bg-emerald-50', iconColor: 'text-emerald-500', title: 'Attendance marked today', desc: 'Present for all classes', time: '2h ago' },
-                { icon: 'book-open', iconBg: 'bg-violet-50', iconColor: 'text-violet-500', title: 'New exam result published', desc: 'Mathematics - Mid Term', time: '5h ago' },
-                { icon: 'currency', iconBg: 'bg-amber-50', iconColor: 'text-amber-500', title: 'Fee payment reminder', desc: 'Tuition fee due on March 15', time: '1d ago' },
-                { icon: 'megaphone', iconBg: 'bg-sky-50', iconColor: 'text-sky-500', title: 'Sports day announced', desc: 'Annual sports day on March 20', time: '2d ago' }
-            );
+            container.innerHTML = `
+                <div class="activity-item">
+                    <div class="activity-icon bg-gray-50">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="activity-info">
+                        <div class="activity-title">No recent activity</div>
+                        <div class="activity-desc">Your activity will appear here</div>
+                    </div>
+                    <span class="activity-time">-</span>
+                </div>
+            `;
+            return;
         }
 
         container.innerHTML = activities.map(a => this.renderActivityItem(a)).join('');
@@ -281,11 +477,12 @@ class DashboardManager {
 
         const notifications = [];
 
-        if (data.recentAnnouncements) {
+        // Add announcements as notifications
+        if (data.recentAnnouncements && data.recentAnnouncements.length > 0) {
             data.recentAnnouncements.slice(0, 3).forEach(ann => {
                 notifications.push({
                     title: ann.title || 'New Announcement',
-                    desc: ann.message ? ann.message.substring(0, 50) : 'View details',
+                    desc: ann.message ? ann.message.substring(0, 50) + (ann.message.length > 50 ? '...' : '') : 'View details',
                     time: this.timeAgo(ann.createdAt),
                     type: 'info',
                     unread: true
@@ -293,36 +490,89 @@ class DashboardManager {
             });
         }
 
+        // Add fee notifications
         if (data.pendingFees && data.pendingFees.length > 0) {
-            notifications.push({
-                title: 'Fee Payment Due',
-                desc: `₹${data.pendingFees[0].amount?.toLocaleString()} payment reminder`,
-                time: 'Action needed',
-                type: 'warning',
-                unread: true
-            });
+            const overdueFees = data.pendingFees.filter(f => new Date(f.dueDate) < new Date());
+            const upcomingFees = data.pendingFees.filter(f => new Date(f.dueDate) >= new Date());
+            
+            if (overdueFees.length > 0) {
+                notifications.push({
+                    title: 'Fee Payment Overdue',
+                    desc: `${overdueFees.length} overdue payment${overdueFees.length > 1 ? 's' : ''}`,
+                    time: 'Action required',
+                    type: 'danger',
+                    unread: true
+                });
+            }
+            
+            if (upcomingFees.length > 0) {
+                const nextFee = upcomingFees[0];
+                notifications.push({
+                    title: 'Fee Payment Due',
+                    desc: `₹${(nextFee.amount - (nextFee.paidAmount || 0)).toLocaleString()} - ${nextFee.feeType || 'Fee'}`,
+                    time: `Due ${new Date(nextFee.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
+                    type: 'warning',
+                    unread: true
+                });
+            }
         }
 
+        // Add attendance alert if low
         if (data.recentAttendance && data.recentAttendance.length > 0) {
-            const absent = data.recentAttendance.filter(a => a.status === 'absent');
-            if (absent.length > 0) {
+            const total = data.recentAttendance.length;
+            const present = data.recentAttendance.filter(a => (a.status || '').toLowerCase() === 'present').length;
+            const percentage = total > 0 ? (present / total) * 100 : 0;
+            
+            if (percentage < 75) {
                 notifications.push({
                     title: 'Attendance Alert',
-                    desc: `${absent.length} absent day${absent.length > 1 ? 's' : ''} this period`,
-                    time: this.timeAgo(absent[0].date),
+                    desc: `Your attendance is ${Math.round(percentage)}% (below 75%)`,
+                    time: 'This month',
                     type: 'danger',
                     unread: true
                 });
             }
         }
 
-        // Defaults
+        // Add homework notifications
+        if (data.recentHomework && data.recentHomework.length > 0) {
+            const recentHw = data.recentHomework[0];
+            const hwDate = new Date(recentHw.createdAt);
+            const isRecent = (new Date() - hwDate) < 86400000; // Less than 24 hours
+            
+            if (isRecent) {
+                notifications.push({
+                    title: 'New Homework Assigned',
+                    desc: `${recentHw.subject || 'Subject'} - ${recentHw.title || 'Assignment'}`,
+                    time: this.timeAgo(recentHw.createdAt),
+                    type: 'info',
+                    unread: true
+                });
+            }
+        }
+
+        // Show default message if no notifications
         if (notifications.length === 0) {
-            notifications.push(
-                { title: 'New result published', desc: 'Mathematics mid-term results are out', time: '2h ago', type: 'info', unread: true },
-                { title: 'Attendance alert', desc: 'Your attendance is below 80%', time: '5h ago', type: 'danger', unread: true },
-                { title: 'Fee reminder', desc: 'Tuition fee due on March 15', time: '1d ago', type: 'warning', unread: false }
-            );
+            list.innerHTML = `
+                <div class="notification-item">
+                    <div class="notif-icon" style="background: #f3f4f6;">
+                        <svg style="color: #9ca3af;" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="notif-content">
+                        <div class="notif-title">No new notifications</div>
+                        <div class="notif-desc">You're all caught up!</div>
+                        <div class="notif-time">-</div>
+                    </div>
+                </div>
+            `;
+            
+            // Update badge
+            const badge = document.querySelector('#notification-bell .badge');
+            if (badge) badge.style.display = 'none';
+            
+            return;
         }
 
         const notifColors = {
@@ -353,17 +603,36 @@ class DashboardManager {
         // Update badge count
         const unreadCount = notifications.filter(n => n.unread).length;
         const badge = document.querySelector('#notification-bell .badge');
+        const navBadge = document.getElementById('nav-notif-badge');
+        const notifBadgeCount = document.getElementById('notif-badge-count');
+        
         if (badge) {
             badge.textContent = unreadCount;
             badge.style.display = unreadCount > 0 ? 'flex' : 'none';
         }
+        if (navBadge) {
+            navBadge.textContent = unreadCount;
+            navBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+        }
+        if (notifBadgeCount) {
+            notifBadgeCount.textContent = unreadCount;
+        }
     }
 
-    /** Start auto-refresh every 10 seconds */
+    /** Start auto-refresh every 30 seconds */
     startAutoRefresh() {
-        api.startAutoRefresh(() => {
+        // Clear any existing interval
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+        }
+
+        // Refresh every 30 seconds
+        this.refreshInterval = setInterval(() => {
+            console.log('🔄 Auto-refreshing dashboard data...');
             this.loadDashboardData();
-        }, 10000);
+        }, 30000);
+
+        console.log('✅ Auto-refresh enabled (30s interval)');
     }
 
     /** Update refresh timestamp */
@@ -393,7 +662,22 @@ class DashboardManager {
         if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
+
+    /** Cleanup on page unload */
+    cleanup() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+        }
+        if (this.socket) {
+            this.socket.disconnect();
+        }
+    }
 }
 
 // Export singleton
 const dashboard = new DashboardManager();
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    dashboard.cleanup();
+});

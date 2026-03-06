@@ -13,7 +13,7 @@ const API_BASE = 'http://localhost:5000/api';
  * @returns {Promise} - API response
  */
 export async function api(endpoint, method = 'GET', data = null) {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   
   const options = {
     method,
@@ -74,14 +74,14 @@ export async function del(endpoint) {
  * Check if user is authenticated
  */
 export function isAuthenticated() {
-  return !!localStorage.getItem('token');
+  return !!sessionStorage.getItem('token');
 }
 
 /**
- * Get current user from localStorage
+ * Get current user from sessionStorage
  */
 export function getCurrentUser() {
-  const user = localStorage.getItem('user');
+  const user = sessionStorage.getItem('user');
   return user ? JSON.parse(user) : null;
 }
 
@@ -89,16 +89,16 @@ export function getCurrentUser() {
  * Save auth data
  */
 export function saveAuth(token, user) {
-  localStorage.setItem('token', token);
-  localStorage.setItem('user', JSON.stringify(user));
+  sessionStorage.setItem('token', token);
+  sessionStorage.setItem('user', JSON.stringify(user));
 }
 
 /**
  * Clear auth data
  */
 export function clearAuth() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  sessionStorage.removeItem('token');
+  sessionStorage.removeItem('user');
 }
 
 /**

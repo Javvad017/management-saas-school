@@ -1,8 +1,8 @@
 const axios = require('axios');
 
 const API_URL = 'http://localhost:5000/api';
-let token = localStorage.getItem('token');
-let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+let token = sessionStorage.getItem('token');
+let currentUser = JSON.parse(sessionStorage.getItem('user') || '{}');
 
 // API Helper
 const api = axios.create({
@@ -31,8 +31,8 @@ if (currentUser.name) {
 
 // Logout
 document.getElementById('logout-btn').addEventListener('click', () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  sessionStorage.removeItem('token');
+  sessionStorage.removeItem('user');
   window.location.href = '../index.html';
 });
 

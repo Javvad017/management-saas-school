@@ -13,8 +13,8 @@ const AUTH_CONFIG = {
 
 class AuthGuard {
     constructor() {
-        this.token = localStorage.getItem('token');
-        this.user = JSON.parse(localStorage.getItem('user') || '{}');
+        this.token = sessionStorage.getItem('token');
+        this.user = JSON.parse(sessionStorage.getItem('user') || '{}');
     }
 
     /** Get current user role */
@@ -126,8 +126,8 @@ class AuthGuard {
         }
 
         // Store auth data
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data));
+        sessionStorage.setItem('token', data.data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.data));
 
         this.token = data.data.token;
         this.user = data.data;
@@ -137,8 +137,8 @@ class AuthGuard {
 
     /** Logout */
     logout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
         this.token = null;
         this.user = {};
         window.location.href = this.getLoginPath();
